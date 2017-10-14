@@ -9,6 +9,10 @@ RUN apt-get update && apt-get install -y libfreetype6-dev libjpeg62-turbo-dev \
 
 RUN pecl install xdebug && docker-php-ext-enable xdebug
 
+RUN docker-php-ext-install pdo pdo_mysql
+
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+
+RUN echo 'alias ll="ls -l --color=auto"' >> ~/.bashrc
 
 #CMD ["php"]
