@@ -14,11 +14,10 @@ class CreateEmployeesTable extends Migration
     public function up()
     {
         Schema::create('employees', function (Blueprint $table) {
-            $table->bigIncrements('id');
-            $table->bigInteger('company_id')->unsigned();
+            $table->increments('id');
+            $table->integer('company_id')->unsigned();
             $table->string('registration_number')->unique();
             $table->string('name', 100)->index();
-            $table->string('password', 8);
             $table->decimal('balance', 5, 2);
             $table->timestamps();
 

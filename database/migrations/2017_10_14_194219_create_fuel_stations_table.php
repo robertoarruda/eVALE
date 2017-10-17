@@ -14,10 +14,10 @@ class CreateFuelStationsTable extends Migration
     public function up()
     {
         Schema::create('fuel_stations', function (Blueprint $table) {
-            $table->bigIncrements('id');
+            $table->increments('id');
             $table->string('name', 100)->index();
             $table->string('cnjp', 14)->unique();
-            $table->string('address', 14);
+            $table->string('address', 100);
             $table->string('phone', 11);
             $table->timestamps();
         });
