@@ -11,7 +11,7 @@ class FuelStation extends Model
      */
     protected $fillable = [
         'name',
-        'cnjp',
+        'cnpj',
         'address',
         'phone',
     ];
@@ -22,7 +22,7 @@ class FuelStation extends Model
     protected $visible = [
         'id',
         'name',
-        'cnjp',
+        'cnpj',
         'address',
         'phone',
     ];
@@ -33,7 +33,7 @@ class FuelStation extends Model
     protected $casts = [
         'id' => 'integer',
         'name' => 'string',
-        'cnjp' => 'string',
+        'cnpj' => 'string',
         'address' => 'string',
         'phone' => 'string',
     ];

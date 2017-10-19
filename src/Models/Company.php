@@ -11,9 +11,10 @@ class Company extends Model
      */
     protected $fillable = [
         'name',
-        'cnjp',
+        'cnpj',
         'address',
         'phone',
+        'subscription_limit',
     ];
 
     /**
@@ -22,9 +23,10 @@ class Company extends Model
     protected $visible = [
         'id',
         'name',
-        'cnjp',
+        'cnpj',
         'address',
         'phone',
+        'subscription_limit',
     ];
 
     /**
@@ -33,9 +35,10 @@ class Company extends Model
     protected $casts = [
         'id' => 'integer',
         'name' => 'string',
-        'cnjp' => 'string',
+        'cnpj' => 'string',
         'address' => 'string',
         'phone' => 'string',
+        'subscription_limit' => 'double',
     ];
 
     /**

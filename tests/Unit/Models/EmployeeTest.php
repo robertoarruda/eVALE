@@ -29,9 +29,10 @@ class EmployeeTest extends TestCase
         $this->assertEquals(
             [
                 'company_id',
+                'cpf',
                 'registration_number',
                 'name',
-                'balance',
+                'password',
             ],
             $property->getValue($this->testedClass)
         );
@@ -43,7 +44,7 @@ class EmployeeTest extends TestCase
     public function testRelationWithCompany()
     {
         $company = factory(Company::class)->create();
-        $employee = factory(Employee::class)
+        $employee = factory(Employee::class, 'create')
             ->create(['company_id' => $company->id]);
 
         $this->assertEquals(

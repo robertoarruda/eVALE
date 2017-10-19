@@ -11,9 +11,10 @@ class Employee extends Model
      */
     protected $fillable = [
         'company_id',
+        'cpf',
         'registration_number',
         'name',
-        'balance',
+        'password',
     ];
 
     /**
@@ -22,9 +23,10 @@ class Employee extends Model
     protected $visible = [
         'id',
         'company_id',
+        'cpf',
         'registration_number',
         'name',
-        'balance',
+        'password',
     ];
 
     /**
@@ -33,9 +35,10 @@ class Employee extends Model
     protected $casts = [
         'id' => 'integer',
         'company_id' => 'string',
+        'cpf' => 'string',
         'registration_number' => 'string',
         'name' => 'string',
-        'balance' => 'double',
+        'password' => 'string',
     ];
 
     /**
