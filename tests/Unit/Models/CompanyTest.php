@@ -29,9 +29,10 @@ class CompanyTest extends TestCase
         $this->assertEquals(
             [
                 'name',
-                'cnjp',
+                'cnpj',
                 'address',
                 'phone',
+                'subscription_limit',
             ],
             $property->getValue($this->testedClass)
         );

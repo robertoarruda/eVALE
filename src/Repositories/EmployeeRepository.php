@@ -6,13 +6,12 @@ use Nero\ValeExpress\Models\Employee;
 
 class EmployeeRepository extends Repository
 {
-
     /**
      * Metodo construtor da classe
      * @return void
      */
-    public function __construct(Employee $employee)
+    public function __construct(Employee $repository)
     {
-        $this->model = $employee;
+        $this->model = $repository;
     }
 }

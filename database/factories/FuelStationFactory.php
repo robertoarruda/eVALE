@@ -13,13 +13,11 @@ use Faker\Generator as Faker;
 |
  */
 
-$factory->define(App\User::class, function (Faker $faker) {
-    static $password;
-
+$factory->define(Nero\ValeExpress\Models\FuelStation::class, function (Faker $faker) {
     return [
-        'name' => $faker->name,
-        'email' => $faker->unique()->safeEmail,
-        'password' => $password ?: $password = bcrypt('secret'),
-        'remember_token' => str_random(10),
+        'name' => $faker->company,
+        'cnpj' => $faker->randomNumber(8),
+        'address' => $faker->address,
+        'phone' => $faker->phoneNumberCleared,
     ];
 });

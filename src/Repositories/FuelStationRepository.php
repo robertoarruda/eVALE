@@ -6,13 +6,12 @@ use Nero\ValeExpress\Models\FuelStation;
 
 class FuelStationRepository extends Repository
 {
-
     /**
      * Metodo construtor da classe
      * @return void
      */
-    public function __construct(FuelStation $fuelStation)
+    public function __construct(FuelStation $repository)
     {
-        $this->model = $fuelStation;
+        $this->model = $repository;
     }
 }

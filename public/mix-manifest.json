@@ -2,7 +2,9 @@
     "/js/app.js": "/js/app.js",
     "/css/app.css": "/css/app.css",
     "/css/admin.css": "/css/admin.css",
+    "/css/example.css": "/css/example.css",
     "/css/timeline.css": "/css/timeline.css",
+    "/js/example.js": "/js/example.js",
     "/js/admin.js": "/js/admin.js",
     "/js/Chart.js": "/js/Chart.js"
 }

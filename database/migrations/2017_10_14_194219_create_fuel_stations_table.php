@@ -16,9 +16,9 @@ class CreateFuelStationsTable extends Migration
         Schema::create('fuel_stations', function (Blueprint $table) {
             $table->increments('id');
             $table->string('name', 100)->index();
-            $table->string('cnjp', 14)->unique();
-            $table->string('address', 100);
-            $table->string('phone', 11);
+            $table->string('cnpj', 14)->unique();
+            $table->string('address', 100)->nullable();
+            $table->string('phone', 11)->nullable();
             $table->timestamps();
         });
     }
