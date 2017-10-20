@@ -10,8 +10,8 @@ class EmployeeRepository extends Repository
      * Metodo construtor da classe
      * @return void
      */
-    public function __construct(Employee $repository)
+    public function __construct(Employee $model)
     {
-        $this->model = $repository;
+        $this->model = $model;
     }
 }

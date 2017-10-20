@@ -99,9 +99,11 @@ class CompanyRepositoryTest extends TestCase
         $company = factory(Company::class)->make();
 
         $this->dependencies['company']
-            ->shouldReceive('where->update')
+            ->shouldReceive('where->first->fill->save')
             ->with('id', 1)
+            ->with()
             ->with($company->toArray())
+            ->with()
             ->once()
             ->andReturn($company);
 

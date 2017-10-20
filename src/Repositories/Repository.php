@@ -51,7 +51,9 @@ abstract class Repository
     {
         return $this->model
             ->where('id', $entityId)
-            ->update($data);
+            ->first()
+            ->fill($data)
+            ->save();
     }
 
     /**

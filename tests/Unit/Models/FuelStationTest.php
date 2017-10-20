@@ -28,7 +28,7 @@ class FuelStationTest extends TestCase
         $this->assertEquals(
             [
                 'name',
-                'cnjp',
+                'cnpj',
                 'address',
                 'phone',
             ],

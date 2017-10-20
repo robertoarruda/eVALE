@@ -11,7 +11,7 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand" href="{{ route('company.index') }}">{{ config('app.name') }}</a>
+                <a class="navbar-brand" href="{{ route('admin.index') }}">{{ config('app.name') }}</a>
             </div>
             <!-- /.navbar-header -->
 
@@ -40,11 +40,11 @@
             <div class="navbar-default sidebar" role="navigation">
                 <div class="sidebar-nav navbar-collapse">
                     <ul class="nav" id="side-menu">
-                        <li {{ (Request::is('*company') ? 'class="active"' : '') }}>
-                            <a href="{{ route('company.index') }}"><i class="fa fa-dashboard fa-fw"></i> Dashboard</a>
+                        <li {{ (Request::is('*admin') ? 'class="active"' : '') }}>
+                            <a href="{{ route('admin.index') }}"><i class="fa fa-dashboard fa-fw"></i> Dashboard</a>
                         </li>
                         <li {{ (Request::is('*create') ? 'class="active"' : '') }}>
-                            <a href="{{ route('company.create') }}"><i class="fa fa-edit fa-fw"></i> Cadastro funcionários</a>
+                            <a href="{{ route('admin.create') }}"><i class="fa fa-edit fa-fw"></i> Cadastro empresa</a>
                         </li>
                         <li {{ (Request::is('*charts') ? 'class="active"' : '') }}>
                             <a href="{{ url ('#') }}"><i class="fa fa-bar-chart-o fa-fw"></i> Transações</a>

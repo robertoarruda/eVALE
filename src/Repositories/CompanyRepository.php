@@ -10,8 +10,8 @@ class CompanyRepository extends Repository
      * Metodo construtor da classe
      * @return void
      */
-    public function __construct(Company $repository)
+    public function __construct(Company $model)
     {
-        $this->model = $repository;
+        $this->model = $model;
     }
 }

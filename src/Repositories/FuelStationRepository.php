@@ -10,8 +10,8 @@ class FuelStationRepository extends Repository
      * Metodo construtor da classe
      * @return void
      */
-    public function __construct(FuelStation $repository)
+    public function __construct(FuelStation $model)
     {
-        $this->model = $repository;
+        $this->model = $model;
     }
 }

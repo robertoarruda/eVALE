@@ -99,9 +99,11 @@ class EmployeeRepositoryTest extends TestCase
         $employee = factory(Employee::class)->make();
 
         $this->dependencies['employee']
-            ->shouldReceive('where->update')
+            ->shouldReceive('where->first->fill->save')
             ->with('id', 1)
+            ->with()
             ->with($employee->toArray())
+            ->with()
             ->once()
             ->andReturn($employee);
 

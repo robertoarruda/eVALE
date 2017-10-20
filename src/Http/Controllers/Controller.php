@@ -15,7 +15,7 @@ abstract class Controller extends BaseController
     /**
      * @var string
      */
-    protected $entity;
+    protected $view;
 
     /**
      * @var \Nero\ValeExpress\Services\Service
@@ -24,77 +24,81 @@ abstract class Controller extends BaseController
 
     /**
      * Index
-     * @param Request $request
-     * @return
+     * @return \Illuminate\Http\Response
      */
-    public function index(Request $request)
+    public function index()
     {
-        return view("{$this->entity}.index", $this->service->index());
+        return view("{$this->view}.index", $this->service->index());
     }
 
     /**
      * Create
-     * @param Request $request
-     * @return
+     * @return \Illuminate\Http\Response
      */
-    public function create(Request $request)
+    public function create()
     {
-        return view("{$this->entity}.form");
+        return view("{$this->view}.form");
     }
 
     /**
      * Store
      * @param Request $request
-     * @return
+     * @return \Illuminate\Routing\Redirector|\Illuminate\Http\RedirectResponse
      */
-    public function store(Request $request)
+    protected function mainStore(Request $request)
     {
-        $created = $this->service->create($request->all());
+        $this->service->create($request->all());
 
-        return redirect('company')->with('success', 'Registro salvo com sucesso!');
+        return redirect()->route("{$this->view}.index")
+            ->with('success', 'Registro salvo com sucesso!');
     }
 
     /**
      * Show
-     * @param Request $request
      * @param int $entityId Id da entidade
-     * @return
+     * @return \Illuminate\Routing\Redirector|\Illuminate\Http\RedirectResponse
      */
-    public function show(Request $request, int $entityId)
+    public function show(int $entityId)
     {
-        $data = $this->service->findById($entityId);
+        return redirect()->route("{$this->view}.edit", $entityId);
     }
 
     /**
      * Edit
-     * @param Request $request
      * @param int $entityId Id da entidade
-     * @return
+     * @return \Illuminate\Http\Response
      */
-    public function edit(Request $request, int $entityId)
+    public function edit(int $entityId)
     {
         $data = $this->service->findById($entityId);
+
+        return view("{$this->view}.form", $data->toArray());
     }
 
     /**
      * Update
      * @param Request $request
      * @param int $entityId Id da entidade
-     * @return
+     * @return \Illuminate\Routing\Redirector|\Illuminate\Http\RedirectResponse
      */
-    public function update(Request $request, int $entityId)
+    protected function mainUpdate(Request $request, int $entityId)
     {
-        return $this->service->update($entityId, $request->all());
+        $this->service->update($entityId, $request->all());
+
+        return redirect()->route("{$this->view}.index")
+            ->with('success', 'Registro alterado com sucesso!');
     }
 
     /**
-     * Delete
-     * @param Request $request
+     * Destroy
      * @param int $entityId Id da entidade
-     * @return
+     * @return \Illuminate\Routing\Redirector|\Illuminate\Http\RedirectResponse
      */
-    public function delete(Request $request, int $entityId)
+    public function destroy(int $entityId)
     {
-        return $this->service->delete($entityId);
+        $this->service->delete($entityId);
+
+        return redirect()->route("{$this->view}.index")
+            ->with('success', 'Registro excluido com sucesso!');
     }
 }

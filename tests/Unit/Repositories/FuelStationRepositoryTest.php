@@ -99,9 +99,11 @@ class FuelStationRepositoryTest extends TestCase
         $fuelStation = factory(FuelStation::class)->make();
 
         $this->dependencies['fuelStation']
-            ->shouldReceive('where->update')
+            ->shouldReceive('where->first->fill->save')
             ->with('id', 1)
+            ->with()
             ->with($fuelStation->toArray())
+            ->with()
             ->once()
             ->andReturn($fuelStation);
 
