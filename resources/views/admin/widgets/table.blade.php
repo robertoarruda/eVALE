@@ -11,10 +11,10 @@
             <tr>
                 <td>{{ $data->name }}</td>
                 <td>
-                    <form role="form" action="{{ route('company.destroy', $data->id) }}" method="post">
+                    <form role="form" action="{{ route('admin.destroy', $data->id) }}" method="post">
                         {{ csrf_field() }}
                         {{ method_field('delete') }}
-                        <a href="{{ route('company.edit', $data->id) }}" class="btn btn-default">Editar</a>
+                        <a href="{{ route('admin.edit', $data->id) }}" class="btn btn-default">Editar</a>
                         <button type="submit" class="btn btn-danger">Excluir</button>
                     </form>
                 </td>

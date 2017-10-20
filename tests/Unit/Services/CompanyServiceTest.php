@@ -43,13 +43,89 @@ class CompanyServiceTest extends TestCase
 
         $this->dependencies['companyRepository']
             ->shouldReceive('find')
-            ->with()
+            ->with([])
             ->once()
             ->andReturn($company);
 
         $this->assertEquals(
             ['list' => $company],
             $this->testedClass->index()
+        );
+    }
+
+    /**
+     * @covers ::create
+     */
+    public function testCreate()
+    {
+        $company = factory(Company::class)->make();
+
+        $this->dependencies['companyRepository']
+            ->shouldReceive('create')
+            ->with($company->toArray())
+            ->once()
+            ->andReturn($company);
+
+        $this->assertEquals(
+            $company,
+            $this->testedClass->create($company->toArray())
+        );
+    }
+
+    /**
+     * @covers ::findById
+     */
+    public function testFindById()
+    {
+        $company = factory(Company::class)->make(['id' => 1]);
+
+        $this->dependencies['companyRepository']
+            ->shouldReceive('findById')
+            ->with(1)
+            ->once()
+            ->andReturn($company);
+
+        $this->assertEquals(
+            $company,
+            $this->testedClass->findById(1)
+        );
+    }
+
+    /**
+     * @covers ::update
+     */
+    public function testUpdate()
+    {
+        $company = factory(Company::class)->make(['id' => 1]);
+
+        $this->dependencies['companyRepository']
+            ->shouldReceive('update')
+            ->with(1, $company->toArray())
+            ->once()
+            ->andReturn($company);
+
+        $this->assertEquals(
+            $company,
+            $this->testedClass->update(1, $company->toArray())
+        );
+    }
+
+    /**
+     * @covers ::delete
+     */
+    public function testDelete()
+    {
+        $company = Mockery::mock(Company::class);
+
+        $this->dependencies['companyRepository']
+            ->shouldReceive('delete')
+            ->with(1)
+            ->once()
+            ->andReturn($company);
+
+        $this->assertEquals(
+            $company,
+            $this->testedClass->delete(1)
         );
     }
 }

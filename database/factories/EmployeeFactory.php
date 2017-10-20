@@ -16,8 +16,8 @@ use Faker\Generator as Faker;
 $factory->define(Nero\ValeExpress\Models\Employee::class, function (Faker $faker) {
     return [
         'name' => $faker->name,
-        'cpf' => $faker->randomNumber(11),
-        'registration_number' => $faker->randomNumber(8),
+        'cpf' => rand(10000000000, 99999999999),
+        'registration_number' => rand(10000000, 99999999),
         'password' => $faker->password(6, 8),
     ];
 });
@@ -25,8 +25,8 @@ $factory->define(Nero\ValeExpress\Models\Employee::class, function (Faker $faker
 $factory->defineAs(Nero\ValeExpress\Models\Employee::class, 'create', function (Faker $faker) {
     return [
         'name' => $faker->name,
-        'cpf' => $faker->randomNumber(11),
-        'registration_number' => $faker->randomNumber(8),
+        'cpf' => rand(10000000000, 99999999999),
+        'registration_number' => rand(10000000, 99999999),
         'password' => $faker->password(6, 8),
         'company_id' => factory(Nero\ValeExpress\Models\Company::class)->create()->id,
     ];

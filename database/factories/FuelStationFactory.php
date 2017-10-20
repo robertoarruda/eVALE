@@ -16,7 +16,7 @@ use Faker\Generator as Faker;
 $factory->define(Nero\ValeExpress\Models\FuelStation::class, function (Faker $faker) {
     return [
         'name' => $faker->company,
-        'cnpj' => $faker->randomNumber(8),
+        'cnpj' => rand(10000000000000, 99999999999999),
         'address' => $faker->address,
         'phone' => $faker->phoneNumberCleared,
     ];

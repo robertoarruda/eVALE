@@ -2,25 +2,25 @@
 
 namespace Nero\ValeExpress\Http\Controllers;
 
-use Nero\ValeExpress\Http\Requests\EmployeeFormRequest;
-use Nero\ValeExpress\Services\EmployeeService;
+use Nero\ValeExpress\Http\Requests\CompanyFormRequest;
+use Nero\ValeExpress\Services\CompanyService;
 
-class CompanyController extends Controller
+class AdminController extends Controller
 {
     /**
      * Metodo construtor da classe
      * @return void
      */
-    public function __construct(EmployeeService $service)
+    public function __construct(CompanyService $service)
     {
-        $this->view = 'company';
+        $this->view = 'admin';
         $this->service = $service;
     }
 
     /**
      * @see \Nero\ValeExpress\Http\Controllers\Controller::mainStore()
      */
-    public function store(EmployeeFormRequest $request)
+    public function store(CompanyFormRequest $request)
     {
         return parent::mainStore($request);
     }
@@ -28,7 +28,7 @@ class CompanyController extends Controller
     /**
      * @see \Nero\ValeExpress\Http\Controllers\Controller::mainUpdate()
      */
-    public function update(EmployeeFormRequest $request, int $entityId)
+    public function update(CompanyFormRequest $request, int $entityId)
     {
         return parent::mainUpdate($request, $entityId);
     }
