@@ -1,4 +1,4 @@
-@extends ('layouts.app')
+@extends ('layouts.app', ['bdstyle' => 'bg-info'])
 @section ('body')
     <div class="container">
         <div class="row" style="margin-top: 100px;">
@@ -50,7 +50,7 @@
 
                             <div class="form-group">
                                 <div class="col-md-12 text-center">
-                                    <button type="submit" class="btn btn-primary btn-success btn-block">
+                                    <button type="submit" class="btn btn-primary btn-block">
                                         Login
                                     </button>
                                 </div>

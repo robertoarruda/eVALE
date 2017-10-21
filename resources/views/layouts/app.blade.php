@@ -17,7 +17,7 @@
         </script>
 
     </head>
-    <body>
+    <body class="{{ $bdstyle ?? '' }}">
         @yield('body')
 
         <script src="{{ asset("js/app.js") }}"></script>
