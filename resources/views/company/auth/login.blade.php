@@ -53,6 +53,10 @@
                                     <button type="submit" class="btn btn-success btn-block">
                                         Login
                                     </button>
+                                    <br>
+                                    <a class="btn-link" href="{{ route('admin.login') }}">
+                                        Admininstador?
+                                    </a>
                                 </div>
                             </div>
                         </form>

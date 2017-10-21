@@ -29,6 +29,9 @@ class CompanyLoginController extends Controller
         if (Auth::guard('company')->check()) {
             return redirect()->route('company.index');
         }
+        if (Auth::guard('admin')->check()) {
+            return redirect()->route('admin.index');
+        }
 
         return view('company.auth.login');
     }
@@ -56,7 +59,7 @@ class CompanyLoginController extends Controller
     {
         $this->guard('company')->logout();
 
-        // $request->session()->invalidate();
+        $request->session()->invalidate();
 
         return redirect()->route('company.index');
     }

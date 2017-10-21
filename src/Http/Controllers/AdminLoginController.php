@@ -30,6 +30,10 @@ class AdminLoginController extends Controller
             return redirect()->route('admin.index');
         }
 
+        if (Auth::guard('company')->check()) {
+            return redirect()->route('company.index');
+        }
+
         return view('admin.auth.login');
     }
 
@@ -56,7 +60,7 @@ class AdminLoginController extends Controller
     {
         $this->guard('admin')->logout();
 
-        // $request->session()->invalidate();
+        $request->session()->invalidate();
 
         return redirect()->route('admin.index');
     }
