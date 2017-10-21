@@ -40,6 +40,14 @@ return [
             'driver' => 'session',
             'provider' => 'users',
         ],
+        'admin' => [
+            'driver' => 'session',
+            'provider' => 'users',
+        ],
+        'company' => [
+            'driver' => 'session',
+            'provider' => 'companies',
+        ],
 
         'api' => [
             'driver' => 'token',
@@ -67,7 +75,11 @@ return [
     'providers' => [
         'users' => [
             'driver' => 'eloquent',
-            'model' => App\User::class,
+            'model' => Nero\ValeExpress\Models\User::class,
+        ],
+        'companies' => [
+            'driver' => 'eloquent',
+            'model' => Nero\ValeExpress\Models\Company::class,
         ],
 
         // 'users' => [

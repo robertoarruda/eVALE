@@ -2,10 +2,13 @@
 
 namespace Nero\ValeExpress\Models;
 
-use Illuminate\Database\Eloquent\Model;
+use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Notifications\Notifiable;
 
-class Company extends Model
+class Company extends Authenticatable
 {
+    use Notifiable;
+
     /**
      * @var array Campos atribuiveis
      */
@@ -15,6 +18,8 @@ class Company extends Model
         'address',
         'phone',
         'subscription_limit',
+        'login',
+        'password',
     ];
 
     /**
@@ -27,6 +32,7 @@ class Company extends Model
         'address',
         'phone',
         'subscription_limit',
+        'login',
     ];
 
     /**
@@ -39,6 +45,17 @@ class Company extends Model
         'address' => 'string',
         'phone' => 'string',
         'subscription_limit' => 'double',
+        'login' => 'string',
+        'password' => 'string',
+    ];
+
+    /**
+     * The attributes that should be hidden for arrays.
+     *
+     * @var array
+     */
+    protected $hidden = [
+        'password', 'remember_token',
     ];
 
     /**
@@ -49,5 +66,15 @@ class Company extends Model
     public function employees()
     {
         return $this->hasMany(Employee::class, 'company_id');
+    }
+
+    /**
+     * Manipula campo antes de atribuir
+     * @param string $password
+     * @return string
+     */
+    public function setPasswordAttribute($password)
+    {
+        return $this->attributes['password'] = bcrypt($password);
     }
 }

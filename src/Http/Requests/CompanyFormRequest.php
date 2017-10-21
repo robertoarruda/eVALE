@@ -23,13 +23,20 @@ class CompanyFormRequest extends FormRequest
      */
     public function rules()
     {
-        return [
+        $rules = [
             'name' => 'required',
             'cnpj' => "required|unique:companies,cnpj,{$this->companyId}",
             'address' => 'nullable',
             'phone' => 'nullable',
             'subscription_limit' => 'required',
+            'login' => "required|unique:companies,login,{$this->companyId}",
         ];
+
+        if ($this->method() == 'POST') {
+            $rules['password'] = 'required';
+        }
+
+        return $rules;
     }
 
     /**
@@ -41,6 +48,7 @@ class CompanyFormRequest extends FormRequest
     {
         return [
             'cnpj.unique' => 'CNPJ informado já existe',
+            'login.unique' => 'Login informado já existe',
         ];
     }
 }

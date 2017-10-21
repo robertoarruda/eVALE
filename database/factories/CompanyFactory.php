@@ -20,5 +20,9 @@ $factory->define(Nero\ValeExpress\Models\Company::class, function (Faker $faker)
         'address' => $faker->address,
         'phone' => $faker->phoneNumberCleared,
         'subscription_limit' => $faker->randomFloat(2, 0, 100000),
+        'remember_token' => str_random(10),
+        'login' => strtolower($faker->firstName),
+        'password' => $password ?: $password = bcrypt('secret'),
+        'remember_token' => str_random(10),
     ];
 });

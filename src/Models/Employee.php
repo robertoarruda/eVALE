@@ -11,9 +11,10 @@ class Employee extends Model
      */
     protected $fillable = [
         'company_id',
+        'name',
         'cpf',
         'registration_number',
-        'name',
+        'consumption_limit',
         'password',
     ];
 
@@ -23,10 +24,10 @@ class Employee extends Model
     protected $visible = [
         'id',
         'company_id',
+        'name',
         'cpf',
         'registration_number',
-        'name',
-        'password',
+        'consumption_limit',
     ];
 
     /**
@@ -35,9 +36,10 @@ class Employee extends Model
     protected $casts = [
         'id' => 'integer',
         'company_id' => 'string',
+        'name' => 'string',
         'cpf' => 'string',
         'registration_number' => 'string',
-        'name' => 'string',
+        'consumption_limit' => 'string',
         'password' => 'string',
     ];
 
@@ -49,5 +51,15 @@ class Employee extends Model
     public function company()
     {
         return $this->belongsTo(Company::class, 'company_id');
+    }
+
+    /**
+     * Manipula campo antes de atribuir
+     * @param string $password
+     * @return string
+     */
+    public function setPasswordAttribute($password)
+    {
+        return $this->attributes['password'] = bcrypt($password);
     }
 }
