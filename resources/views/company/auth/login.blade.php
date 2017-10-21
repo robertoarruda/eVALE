@@ -55,7 +55,7 @@
                                     </button>
                                     <br>
                                     <a class="btn-link" href="{{ route('admin.login') }}">
-                                        Admininstador?
+                                        Administrador?
                                     </a>
                                 </div>
                             </div>
