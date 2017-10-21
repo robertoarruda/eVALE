@@ -14,6 +14,8 @@ use Faker\Generator as Faker;
  */
 
 $factory->define(Nero\ValeExpress\Models\Employee::class, function (Faker $faker) {
+    static $password;
+
     return [
         'name' => $faker->name,
         'cpf' => rand(10000000000, 99999999999),

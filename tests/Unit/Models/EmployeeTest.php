@@ -29,9 +29,10 @@ class EmployeeTest extends TestCase
         $this->assertEquals(
             [
                 'company_id',
+                'name',
                 'cpf',
                 'registration_number',
-                'name',
+                'consumption_limit',
                 'password',
             ],
             $property->getValue($this->testedClass)
@@ -50,6 +51,20 @@ class EmployeeTest extends TestCase
         $this->assertEquals(
             $company->toArray(),
             $employee->company->toArray()
+        );
+    }
+
+    /**
+     * @covers ::setPasswordAttribute
+     */
+    public function testSetPasswordAttribute()
+    {
+        $hash = $this->testedClass->setPasswordAttribute('password');
+
+        $this->assertAttributeEquals(
+            ['password' => $hash],
+            'attributes',
+            $this->testedClass
         );
     }
 }

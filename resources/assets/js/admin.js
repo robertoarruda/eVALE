@@ -5,4 +5,4 @@ require('metismenu');
 require('./theme');
 
 // frontend
-require('./frontend');
+// require('./frontend');
