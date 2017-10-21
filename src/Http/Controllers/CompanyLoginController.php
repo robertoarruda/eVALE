@@ -54,9 +54,9 @@ class CompanyLoginController extends Controller
      */
     public function logout(Request $request)
     {
-        $this->guard()->logout();
+        $this->guard('company')->logout();
 
-        $request->session()->invalidate();
+        // $request->session()->invalidate();
 
         return redirect()->route('company.index');
     }
