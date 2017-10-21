@@ -53,6 +53,10 @@
                                     <button type="submit" class="btn btn-primary btn-block">
                                         Login
                                     </button>
+                                    <br>
+                                    <a class="btn-link" href="{{ route('company.login') }}">
+                                        Empresa?
+                                    </a>
                                 </div>
                             </div>
                         </form>
