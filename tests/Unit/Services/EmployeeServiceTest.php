@@ -73,6 +73,25 @@ class EmployeeServiceTest extends TestCase
     }
 
     /**
+     * @covers ::find
+     */
+    public function testFind()
+    {
+        $employee = factory(Employee::class)->make(['id' => 1]);
+
+        $this->dependencies['employeeRepository']
+            ->shouldReceive('find')
+            ->with(['id' => 1])
+            ->once()
+            ->andReturn($employee);
+
+        $this->assertEquals(
+            $employee,
+            $this->testedClass->find(['id' => 1])
+        );
+    }
+
+    /**
      * @covers ::findById
      */
     public function testFindById()

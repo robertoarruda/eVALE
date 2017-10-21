@@ -73,6 +73,25 @@ class CompanyServiceTest extends TestCase
     }
 
     /**
+     * @covers ::find
+     */
+    public function testFind()
+    {
+        $company = factory(Company::class)->make(['id' => 1]);
+
+        $this->dependencies['companyRepository']
+            ->shouldReceive('find')
+            ->with(['id' => 1])
+            ->once()
+            ->andReturn($company);
+
+        $this->assertEquals(
+            $company,
+            $this->testedClass->find(['id' => 1])
+        );
+    }
+
+    /**
      * @covers ::findById
      */
     public function testFindById()

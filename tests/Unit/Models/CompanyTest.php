@@ -33,6 +33,8 @@ class CompanyTest extends TestCase
                 'address',
                 'phone',
                 'subscription_limit',
+                'login',
+                'password',
             ],
             $property->getValue($this->testedClass)
         );
@@ -50,6 +52,20 @@ class CompanyTest extends TestCase
         $this->assertEquals(
             $employees->toArray(),
             $company->employees->toArray()
+        );
+    }
+
+    /**
+     * @covers ::setPasswordAttribute
+     */
+    public function testSetPasswordAttribute()
+    {
+        $hash = $this->testedClass->setPasswordAttribute('password');
+
+        $this->assertAttributeEquals(
+            ['password' => $hash],
+            'attributes',
+            $this->testedClass
         );
     }
 }
