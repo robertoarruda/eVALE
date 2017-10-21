@@ -32,8 +32,18 @@ abstract class Service
     }
 
     /**
+     * Busca registro pelos parametros
+     * @param array $params
+     * @return \Illuminate\Database\Eloquent\Model
+     */
+    public function find(array $params)
+    {
+        return $this->repository->find($params);
+    }
+
+    /**
      * Busca registro pelo id
-     * @param array $params Parametros da busca
+     * @param int $entityId
      * @return \Illuminate\Database\Eloquent\Model
      */
     public function findById(int $entityId)

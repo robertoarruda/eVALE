@@ -23,13 +23,18 @@ class EmployeeFormRequest extends FormRequest
      */
     public function rules()
     {
-        return [
+        $rules = [
             'name' => 'required',
             'cpf' => "required|unique:employees,cpf,{$this->employeeId}",
             'registration_number' => 'nullable',
-            'phone' => 'nullable',
-            'password' => 'required',
+            'consumption_limit' => 'required',
         ];
+
+        if ($this->method() == 'POST') {
+            $rules['password'] = 'required';
+        }
+
+        return $rules;
     }
 
     /**

@@ -32,28 +32,37 @@
 
                     <div class="form-group">
                         <label for="name">Nome</label>
-                        <input id="name" name="name" value="{{ $name ?? '' }}" class="form-control" maxlength="100" required>
+                        <input id="name" name="name" value="{{ $name ?? old('name') }}" class="form-control" maxlength="100" required>
                     </div>
                     <div class="form-group">
                         <label for="cnpj">CNPJ</label>
-                        <input id="cnpj" name="cnpj" value="{{ $cnpj ?? '' }}"  class="form-control" maxlength="14" required>
+                        <input id="cnpj" name="cnpj" value="{{ $cnpj ?? old('cnpj') }}" class="form-control" maxlength="14" required>
                     </div>
                     <div class="form-group">
                         <label for="address">Endereço</label>
-                        <input id="address" name="address" value="{{ $address ?? '' }}"  class="form-control" maxlength="100">
+                        <input id="address" name="address" value="{{ $address ?? old('address') }}" class="form-control" maxlength="100">
                     </div>
                     <div class="form-group">
                         <label for="phone">Telefone</label>
-                        <input id="phone" name="phone" value="{{ $phone ?? '' }}"  class="form-control" maxlength="11">
+                        <input id="phone" name="phone" value="{{ $phone ?? old('phone') }}" class="form-control" maxlength="11">
                     </div>
                     <div class="form-group">
                         <label for="subscription_limit">Limite de assinatura</label>
                         <div class="input-group">
-                            <span class="input-group-addon">$</span>
-                            <input type="number" id="subscription_limit" name="subscription_limit" value="{{ $subscription_limit ?? '' }}"  class="form-control" min="1" max="100000" maxlength="6" required>
-                            <span class="input-group-addon">,00</span>
+                            <span class="input-group-addon">R$</span>
+                            <input type="number" id="subscription_limit" name="subscription_limit" value="{{ $subscription_limit ?? old('subscription_limit') }}" class="form-control" min="1" max="100000" maxlength="6" required>
                         </div>
                     </div>
+                    <div class="form-group">
+                        <label for="login">Login</label>
+                        <input id="login" name="login" value="{{ $login ?? old('login') }}" class="form-control" maxlength="10" required>
+                    </div>
+                    @empty($id)
+                    <div class="form-group">
+                        <label for="password">Senha</label>
+                        <input type="password" id="password" name="password" class="form-control" minlength="6" maxlength="8" required>
+                    </div>
+                    @endempty
                     <button type="submit" class="btn btn-primary">Salvar</button>
                     <button type="reset" class="btn btn-default">Cancelar</button>
                 </form>

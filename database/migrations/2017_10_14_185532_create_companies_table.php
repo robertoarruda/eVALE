@@ -20,6 +20,9 @@ class CreateCompaniesTable extends Migration
             $table->string('address', 100)->nullable();
             $table->string('phone', 11)->nullable();
             $table->decimal('subscription_limit', 8, 2);
+            $table->string('login', 10)->unique();
+            $table->string('password');
+            $table->rememberToken();
             $table->timestamps();
         });
     }
