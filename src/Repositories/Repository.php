@@ -10,6 +10,31 @@ abstract class Repository
     protected $model;
 
     /**
+     * Total de registros
+     * @param array $params Parametros da busca
+     * @return int
+     */
+    public function count(array $params = [])
+    {
+        return $this->model
+            ->where($params)
+            ->count();
+    }
+
+    /**
+     * Soma campo
+     * @param string $field Campo
+     * @param array $params Parametros da busca
+     * @return int
+     */
+    public function sum(string $field, array $params = [])
+    {
+        return $this->model
+            ->where($params)
+            ->sum($field);
+    }
+
+    /**
      * Busca registro
      * @param array $params Parametros da busca
      * @return \Illuminate\Database\Eloquent\Model

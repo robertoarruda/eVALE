@@ -46,7 +46,7 @@
                         <label for="consumption_limit">Limite de consumo</label>
                         <div class="input-group">
                             <span class="input-group-addon">R$</span>
-                            <input type="number" id="consumption_limit" name="consumption_limit" value="{{ $consumption_limit ?? old('consumption_limit') }}" class="form-control" min="1" max="100000" maxlength="6" required>
+                            <input type="number" id="consumption_limit" name="consumption_limit" value="{{ $consumption_limit ?? old('consumption_limit') }}" class="form-control" step="0.01" min="1" max="100000" maxlength="6" required>
                         </div>
                     </div>
                     @empty($id)

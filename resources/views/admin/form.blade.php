@@ -50,7 +50,7 @@
                         <label for="subscription_limit">Limite de assinatura</label>
                         <div class="input-group">
                             <span class="input-group-addon">R$</span>
-                            <input type="number" id="subscription_limit" name="subscription_limit" value="{{ $subscription_limit ?? old('subscription_limit') }}" class="form-control" min="1" max="100000" maxlength="6" required>
+                            <input type="number" id="subscription_limit" name="subscription_limit" value="{{ $subscription_limit ?? old('subscription_limit') }}" class="form-control" step="0.01" min="1" max="100000" maxlength="6" required>
                         </div>
                     </div>
                     <div class="form-group">

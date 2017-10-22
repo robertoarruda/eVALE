@@ -5,23 +5,31 @@ namespace Nero\ValeExpress\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Nero\ValeExpress\Http\Requests\EmployeeFormRequest;
+use Nero\ValeExpress\Services\CompanyService;
 use Nero\ValeExpress\Services\EmployeeService;
 
 class CompanyController extends Controller
 {
     /**
+     * @var \Nero\ValeExpress\Services\CompanyService
+     */
+    protected $companyService;
+
+    /**
      * @var \Nero\ValeExpress\Services\EmployeeService
      */
-    protected $service;
+    protected $employeeService;
 
     /**
      * Metodo construtor da classe
      * @return void
      */
-    public function __construct(EmployeeService $service)
-    {
-        $this->view = 'company';
-        $this->service = $service;
+    public function __construct(
+        CompanyService $companyService,
+        EmployeeService $employeeService
+    ) {
+        $this->companyService = $companyService;
+        $this->employeeService = $employeeService;
     }
 
     /**
@@ -30,9 +38,23 @@ class CompanyController extends Controller
      */
     public function index(Request $request)
     {
-        $params = ['company_id' => $request->user()->id ?? 0];
+        $companyId = $request->user()->id ?? 0;
 
-        return view('company.index', $this->service->index($params));
+        $subscriptionLimit = $this->companyService
+            ->find(['id' => $companyId])->first()->subscription_limit ?? 0;
+
+        $totalConsumptionLimit = $this->employeeService
+            ->sum('consumption_limit', ['company_id' => $companyId]) ?? 0;
+
+        $remainingSubscription = $subscriptionLimit - $totalConsumptionLimit;
+
+        $index = [
+            'list' => $this->employeeService->find(['company_id' => $companyId]),
+            'employeesCount' => $this->employeeService->count(['company_id' => $companyId]) ?: 0,
+            'remainingSubscription' => number_format($remainingSubscription, 2, ',', '.'),
+        ];
+
+        return view('company.index', $index);
     }
 
     /**
@@ -53,7 +75,7 @@ class CompanyController extends Controller
     {
         $request->merge(['company_id' => $request->user()->id ?? 0]);
 
-        $this->service->create($request->all());
+        $this->employeeService->create($request->all());
 
         return redirect()->route('company.index')
             ->with('success', 'Registro salvo com sucesso!');
@@ -81,7 +103,7 @@ class CompanyController extends Controller
             'company_id' => $request->user()->id ?? 0,
         ];
 
-        $data = $this->service->find($params)->first();
+        $data = $this->employeeService->find($params)->first();
 
         return view('company.form', $data->toArray());
     }
@@ -96,7 +118,7 @@ class CompanyController extends Controller
     {
         $request->merge(['company_id' => $request->user()->id ?? 0]);
 
-        $this->service->update($entityId, $request->all());
+        $this->employeeService->update($entityId, $request->all());
 
         return redirect()->route('company.index')
             ->with('success', 'Registro alterado com sucesso!');
@@ -109,7 +131,7 @@ class CompanyController extends Controller
      */
     public function destroy(int $entityId)
     {
-        $this->service->delete($entityId);
+        $this->employeeService->delete($entityId);
 
         return redirect()->route('company.index')
             ->with('success', 'Registro excluido com sucesso!');
