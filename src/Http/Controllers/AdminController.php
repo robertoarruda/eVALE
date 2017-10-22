@@ -6,21 +6,30 @@ use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Nero\ValeExpress\Http\Requests\CompanyFormRequest;
 use Nero\ValeExpress\Services\CompanyService;
+use Nero\ValeExpress\Services\EmployeeService;
 
 class AdminController extends Controller
 {
     /**
      * @var \Nero\ValeExpress\Services\CompanyService
      */
-    protected $service;
+    protected $companyService;
+
+    /**
+     * @var \Nero\ValeExpress\Services\EmployeeService
+     */
+    protected $employeeService;
 
     /**
      * Metodo construtor da classe
      * @return void
      */
-    public function __construct(CompanyService $service)
-    {
-        $this->service = $service;
+    public function __construct(
+        CompanyService $companyService,
+        EmployeeService $employeeService
+    ) {
+        $this->companyService = $companyService;
+        $this->employeeService = $employeeService;
     }
 
     /**
@@ -29,7 +38,16 @@ class AdminController extends Controller
      */
     public function index(Request $request)
     {
-        return view('admin.index', $this->service->index());
+        $subscriptionsTotal = $this->companyService->sum('subscription_limit') ?: 0;
+
+        $index = [
+            'list' => $this->companyService->find(),
+            'companiesCount' => $this->companyService->count() ?: 0,
+            'employeesCount' => $this->employeeService->count() ?: 0,
+            'subscriptionsTotal' => number_format($subscriptionsTotal, 2, ',', '.'),
+        ];
+
+        return view('admin.index', $index);
     }
 
     /**
@@ -48,7 +66,7 @@ class AdminController extends Controller
      */
     public function store(CompanyFormRequest $request)
     {
-        $this->service->create($request->all());
+        $this->companyService->create($request->all());
 
         return redirect()->route('admin.index')
             ->with('success', 'Registro salvo com sucesso!');
@@ -71,7 +89,7 @@ class AdminController extends Controller
      */
     public function edit(Request $request, int $entityId)
     {
-        $data = $this->service->findById($entityId);
+        $data = $this->companyService->findById($entityId);
 
         return view('admin.form', $data->toArray());
     }
@@ -84,7 +102,7 @@ class AdminController extends Controller
      */
     public function update(CompanyFormRequest $request, int $entityId)
     {
-        $this->service->update($entityId, $request->all());
+        $this->companyService->update($entityId, $request->all());
 
         return redirect()->route('admin.index')
             ->with('success', 'Registro alterado com sucesso!');
@@ -97,7 +115,7 @@ class AdminController extends Controller
      */
     public function destroy(int $entityId)
     {
-        $this->service->delete($entityId);
+        $this->companyService->delete($entityId);
 
         return redirect()->route('admin.index')
             ->with('success', 'Registro excluido com sucesso!');

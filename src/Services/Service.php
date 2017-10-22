@@ -10,25 +10,24 @@ abstract class Service
     protected $repository;
 
     /**
-     * Busca pelos parametros
-     * @param array $params Parametros da busca
-     * @return array
+     * Conta registro pelos parametros
+     * @param array $params
+     * @return \Illuminate\Database\Eloquent\Model
      */
-    public function index($params = [])
+    public function count(array $params = [])
     {
-        return [
-            'list' => $this->repository->find($params),
-        ];
+        return $this->repository->count($params);
     }
 
     /**
-     * Salva o registro
-     * @param array $data
+     * Soma registro pelos parametros
+     * @param string $field Campo
+     * @param array $params
      * @return \Illuminate\Database\Eloquent\Model
      */
-    public function create(array $data)
+    public function sum(string $field, array $params = [])
     {
-        return $this->repository->create($data);
+        return $this->repository->sum($field, $params);
     }
 
     /**
@@ -36,7 +35,7 @@ abstract class Service
      * @param array $params
      * @return \Illuminate\Database\Eloquent\Model
      */
-    public function find(array $params)
+    public function find(array $params = [])
     {
         return $this->repository->find($params);
     }
@@ -49,6 +48,16 @@ abstract class Service
     public function findById(int $entityId)
     {
         return $this->repository->findById($entityId);
+    }
+
+    /**
+     * Salva o registro
+     * @param array $data
+     * @return \Illuminate\Database\Eloquent\Model
+     */
+    public function create(array $data)
+    {
+        return $this->repository->create($data);
     }
 
     /**

@@ -35,21 +35,40 @@ class CompanyServiceTest extends TestCase
     }
 
     /**
-     * @covers ::index
+     * @covers ::count
      */
-    public function testIndex()
+    public function testCount()
     {
         $company = factory(Company::class)->make();
 
         $this->dependencies['companyRepository']
-            ->shouldReceive('find')
-            ->with([])
+            ->shouldReceive('count')
+            ->with($company->toArray())
             ->once()
             ->andReturn($company);
 
         $this->assertEquals(
-            ['list' => $company],
-            $this->testedClass->index()
+            $company,
+            $this->testedClass->count($company->toArray())
+        );
+    }
+
+    /**
+     * @covers ::sum
+     */
+    public function testSum()
+    {
+        $company = factory(Company::class)->make();
+
+        $this->dependencies['companyRepository']
+            ->shouldReceive('sum')
+            ->with('field', $company->toArray())
+            ->once()
+            ->andReturn($company);
+
+        $this->assertEquals(
+            $company,
+            $this->testedClass->sum('field', $company->toArray())
         );
     }
 
