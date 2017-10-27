@@ -16,12 +16,12 @@ class EmployeeService extends Service
     }
 
     /**
-     * Retorna o valor restante da assinatura
+     * Retorna o valor restante da assinatura da empresa
      *
      * @param int $companyId Id da empresa
      * @return float
      */
-    public function remainingSubscription(int $companyId)
+    public function companyRemainingSubscription(int $companyId)
     {
         $totalConsumptionLimit = $this->sum('consumption_limit', ['company_id' => $companyId]) ?? 0;
 
