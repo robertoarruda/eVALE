@@ -1,9 +1,27 @@
-
-// Fonts
-@import url("https://fonts.googleapis.com/css?family=Raleway:300,400,600");
-
 // Variables
 @import "variables";
 
 // Bootstrap
-@import "~bootstrap-sass/assets/stylesheets/bootstrap";
+@import "node_modules/bootstrap-sass/assets/stylesheets/bootstrap";
+
+// Font Awesome
+@import "node_modules/font-awesome/scss/font-awesome";
+
+.navbar-logo {
+    height: 55px;
+    margin-top: -15px;
+    display: inline-block !important;
+    vertical-align: middle;
+    vertical-align: -webkit-baseline-middle;
+}
+
+.login-logo {
+    height: 100px;
+    width: 133px;
+    margin-left: 86px;
+    background-image: url(http://evale.dev/img/LOGO.svg);
+    background-position-x: unset;
+    background-position-y: -30px;
+    background-size: cover;
+    background-repeat: no-repeat;
+}

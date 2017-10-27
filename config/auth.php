@@ -40,6 +40,14 @@ return [
             'driver' => 'session',
             'provider' => 'users',
         ],
+        'admin' => [
+            'driver' => 'session',
+            'provider' => 'users',
+        ],
+        'company' => [
+            'driver' => 'session',
+            'provider' => 'companies',
+        ],
 
         'api' => [
             'driver' => 'token',
@@ -67,7 +75,11 @@ return [
     'providers' => [
         'users' => [
             'driver' => 'eloquent',
-            'model' => App\User::class,
+            'model' => Nero\Evale\Models\User::class,
+        ],
+        'companies' => [
+            'driver' => 'eloquent',
+            'model' => Nero\Evale\Models\Company::class,
         ],
 
         // 'users' => [
@@ -91,12 +103,12 @@ return [
     |
     */
 
-    'passwords' => [
-        'users' => [
-            'provider' => 'users',
-            'table' => 'password_resets',
-            'expire' => 60,
-        ],
-    ],
+    // 'passwords' => [
+    //     'users' => [
+    //         'provider' => 'users',
+    //         'table' => 'password_resets',
+    //         'expire' => 60,
+    //     ],
+    // ],
 
 ];

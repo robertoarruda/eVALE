@@ -9,8 +9,37 @@
 | routes are loaded by the RouteServiceProvider within a group which
 | contains the "web" middleware group. Now create something great!
 |
-*/
+ */
 
-Route::get('/', function () {
-    return view('welcome');
+Route::prefix('admin')->group(function () {
+    $controller = '\Nero\Evale\Http\Controllers\AdminLoginController';
+    Route::post('login', "{$controller}@login");
+    Route::match(['get', 'head'], 'login', "{$controller}@showLoginForm")
+        ->name('admin.login');
+    Route::post('logout', "{$controller}@logout")
+        ->name('admin.logout');
 });
+
+Route::resource(
+    'admin',
+    '\Nero\Evale\Http\Controllers\AdminController',
+    ['parameters' => ['admin' => 'companyId']]
+)->middleware('auth:admin');
+
+Route::prefix('company')->group(function () {
+    $controller = '\Nero\Evale\Http\Controllers\CompanyLoginController';
+    Route::post('login', "{$controller}@login");
+    Route::match(['get', 'head'], 'login', "{$controller}@showLoginForm")
+        ->name('company.login');
+    Route::post('logout', "{$controller}@logout")
+        ->name('company.logout');
+});
+
+Route::resource(
+    'company',
+    '\Nero\Evale\Http\Controllers\CompanyController',
+    ['parameters' => ['company' => 'employeeId']]
+)->middleware('auth:company');
+
+Route::get('/', '\Nero\Evale\Http\Controllers\CompanyController@index')
+    ->middleware('auth:company');
