@@ -76,10 +76,10 @@ class CompanyControllerTest extends TestCase
             ->andReturn($companies);
 
         $this->dependencies['employeeService']
-            ->shouldReceive('sum')
-            ->with('consumption_limit', ['company_id' => $user->id])
+            ->shouldReceive('companyRemainingSubscription')
+            ->with($user->id)
             ->once()
-            ->andReturn($totalConsumptionLimit);
+            ->andReturn($remainingSubscription);
 
         $this->dependencies['employeeService']
             ->shouldReceive('find')

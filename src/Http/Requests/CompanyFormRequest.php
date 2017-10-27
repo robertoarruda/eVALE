@@ -23,13 +23,15 @@ class CompanyFormRequest extends FormRequest
      */
     public function rules()
     {
+        $companyId = $this->companyId ?? 0;
+
         $rules = [
             'name' => 'required',
-            'cnpj' => "required|unique:companies,cnpj,{$this->companyId}",
+            'cnpj' => "required|unique:companies,cnpj,{$companyId}",
             'address' => 'nullable',
             'phone' => 'nullable',
             'subscription_limit' => 'required',
-            'login' => "required|unique:companies,login,{$this->companyId}",
+            'login' => "required|unique:companies,login,{$companyId}",
         ];
 
         if ($this->method() == 'POST') {

@@ -23,13 +23,14 @@ class EmployeeFormRequest extends FormRequest
      */
     public function rules()
     {
+        $employeeId = $this->employeeId ?? 0;
         $companyId = $this->user()->id ?? 0;
 
         $rules = [
             'name' => 'required',
-            'cpf' => "required|unique:employees,cpf,{$this->employeeId}",
-            'registration_number' => "required|unique:employees,registration_number,{$this->employeeId}",
-            'consumption_limit' => "required|subscription_limit:{$companyId},{$this->employeeId}",
+            'cpf' => "required|unique:employees,cpf,{$employeeId}",
+            'registration_number' => "required|unique:employees,registration_number,{$employeeId}",
+            'consumption_limit' => "required|subscription_limit:{$companyId},{$employeeId}",
         ];
 
         if ($this->method() == 'POST') {
