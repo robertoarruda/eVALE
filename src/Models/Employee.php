@@ -1,6 +1,6 @@
 <?php
 
-namespace Nero\ValeExpress\Models;
+namespace Nero\Evale\Models;
 
 use Illuminate\Database\Eloquent\Model;
 

@@ -1,11 +1,11 @@
 <?php
 
-namespace Nero\ValeExpress\Services;
+namespace Nero\Evale\Services;
 
 abstract class Service
 {
     /**
-     * @var \Nero\ValeExpress\Repositories\Repository
+     * @var \Nero\Evale\Repositories\Repository
      */
     protected $repository;
 

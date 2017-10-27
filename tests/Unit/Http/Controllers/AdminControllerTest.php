@@ -1,21 +1,21 @@
 <?php
 
-namespace Tests\Nero\ValeExpress\Http\Controllers;
+namespace Tests\Nero\Evale\Http\Controllers;
 
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Mockery;
-use Nero\ValeExpress\Http\Controllers\AdminController;
-use Nero\ValeExpress\Http\Requests\CompanyFormRequest;
-use Nero\ValeExpress\Models\Company;
-use Nero\ValeExpress\Services\CompanyService;
-use Nero\ValeExpress\Services\EmployeeService;
+use Nero\Evale\Http\Controllers\AdminController;
+use Nero\Evale\Http\Requests\CompanyFormRequest;
+use Nero\Evale\Models\Company;
+use Nero\Evale\Services\CompanyService;
+use Nero\Evale\Services\EmployeeService;
 use Tests\TestCase;
 use View;
 
 /**
- * @coversDefaultClass \Nero\ValeExpress\Http\Controllers\AdminController
+ * @coversDefaultClass \Nero\Evale\Http\Controllers\AdminController
  */
 class AdminControllerTest extends TestCase
 {

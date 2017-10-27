@@ -38,7 +38,7 @@ $app->singleton(
 
 $app->singleton(
     Illuminate\Contracts\Debug\ExceptionHandler::class,
-    Nero\ValeExpress\Exceptions\Handler::class
+    Nero\Evale\Exceptions\Handler::class
 );
 
 /*

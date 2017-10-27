@@ -1,8 +1,13 @@
 <div class="panel panel-{{ $class or 'default' }}">
-    @if (isset($panelTitle))
+    @if (isset($panelTitle) || isset($panelLogo))
         <div class="panel-heading">
+            @if (isset($panelLogo))
+                {{ $panelLogo }}
+            @endif
             <h3 class="panel-title">
-                {{ $panelTitle}}
+                @if (isset($panelTitle))
+                    {{ $panelTitle }}
+                @endif
                 @if (isset($panelControls))
                     <div class="panel-control pull-right">
                         <a class="panelButton"><i class="fa fa-refresh"></i></a>

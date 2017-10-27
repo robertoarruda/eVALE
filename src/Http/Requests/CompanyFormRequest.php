@@ -1,6 +1,6 @@
 <?php
 
-namespace Nero\ValeExpress\Http\Requests;
+namespace Nero\Evale\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 

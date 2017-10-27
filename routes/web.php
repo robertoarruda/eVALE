@@ -12,7 +12,7 @@
  */
 
 Route::prefix('admin')->group(function () {
-    $controller = '\Nero\ValeExpress\Http\Controllers\AdminLoginController';
+    $controller = '\Nero\Evale\Http\Controllers\AdminLoginController';
     Route::post('login', "{$controller}@login");
     Route::match(['get', 'head'], 'login', "{$controller}@showLoginForm")
         ->name('admin.login');
@@ -22,12 +22,12 @@ Route::prefix('admin')->group(function () {
 
 Route::resource(
     'admin',
-    '\Nero\ValeExpress\Http\Controllers\AdminController',
+    '\Nero\Evale\Http\Controllers\AdminController',
     ['parameters' => ['admin' => 'companyId']]
 )->middleware('auth:admin');
 
 Route::prefix('company')->group(function () {
-    $controller = '\Nero\ValeExpress\Http\Controllers\CompanyLoginController';
+    $controller = '\Nero\Evale\Http\Controllers\CompanyLoginController';
     Route::post('login', "{$controller}@login");
     Route::match(['get', 'head'], 'login', "{$controller}@showLoginForm")
         ->name('company.login');
@@ -37,9 +37,9 @@ Route::prefix('company')->group(function () {
 
 Route::resource(
     'company',
-    '\Nero\ValeExpress\Http\Controllers\CompanyController',
+    '\Nero\Evale\Http\Controllers\CompanyController',
     ['parameters' => ['company' => 'employeeId']]
 )->middleware('auth:company');
 
-Route::get('/', '\Nero\ValeExpress\Http\Controllers\CompanyController@index')
+Route::get('/', '\Nero\Evale\Http\Controllers\CompanyController@index')
     ->middleware('auth:company');

@@ -13,7 +13,7 @@ use Faker\Generator as Faker;
 |
  */
 
-$factory->define(Nero\ValeExpress\Models\Employee::class, function (Faker $faker) {
+$factory->define(Nero\Evale\Models\Employee::class, function (Faker $faker) {
     static $password;
 
     return [
@@ -25,13 +25,13 @@ $factory->define(Nero\ValeExpress\Models\Employee::class, function (Faker $faker
     ];
 });
 
-$factory->defineAs(Nero\ValeExpress\Models\Employee::class, 'create', function (Faker $faker) {
+$factory->defineAs(Nero\Evale\Models\Employee::class, 'create', function (Faker $faker) {
     return [
         'name' => $faker->name,
         'cpf' => rand(10000000000, 99999999999),
         'registration_number' => rand(10000000, 99999999),
         'consumption_limit' => $faker->randomFloat(2, 0, 100000),
         'password' => $faker->password(6, 8),
-        'company_id' => factory(Nero\ValeExpress\Models\Company::class)->create()->id,
+        'company_id' => factory(Nero\Evale\Models\Company::class)->create()->id,
     ];
 });

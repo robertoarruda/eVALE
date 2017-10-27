@@ -13,7 +13,7 @@ use Faker\Generator as Faker;
 |
  */
 
-$factory->define(Nero\ValeExpress\Models\Company::class, function (Faker $faker) {
+$factory->define(Nero\Evale\Models\Company::class, function (Faker $faker) {
     static $password;
 
     return [

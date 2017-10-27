@@ -30,7 +30,7 @@ return [
     ],
 
     'stripe' => [
-        'model' => Nero\ValeExpress\Models\User::class,
+        'model' => Nero\Evale\Models\User::class,
         'key' => env('STRIPE_KEY'),
         'secret' => env('STRIPE_SECRET'),
     ],

@@ -11,7 +11,7 @@
          forceCoversAnnotation="true"
         >
     <testsuites>
-        <testsuite name="ValeExpress Test Suite">
+        <testsuite name="eVALE Test Suite">
             <directory suffix="Test.php">./tests</directory>
         </testsuite>
     </testsuites>

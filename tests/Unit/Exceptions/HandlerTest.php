@@ -1,18 +1,18 @@
 <?php
 
-namespace Tests\Nero\ValeExpress\Exceptions;
+namespace Tests\Nero\Evale\Exceptions;
 
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Contracts\Container\Container;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Mockery;
-use Nero\ValeExpress\Exceptions\Handler;
+use Nero\Evale\Exceptions\Handler;
 use Tests\TestCase;
 use URL;
 
 /**
- * @coversDefaultClass \Nero\ValeExpress\Exceptions\Handler
+ * @coversDefaultClass \Nero\Evale\Exceptions\Handler
  */
 class HandlerTest extends TestCase
 {

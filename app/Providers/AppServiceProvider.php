@@ -5,6 +5,7 @@ namespace App\Providers;
 use Faker\Factory as FakerFactory;
 use Faker\Generator as FakerGenerator;
 use Illuminate\Support\ServiceProvider;
+use Validator;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -15,7 +16,10 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        //
+        Validator::extend(
+            'subscription_limit',
+            'Nero\Evale\Validator\EmployeeValidator@validateSubscriptionLimit'
+        );
     }
 
     /**

@@ -1,6 +1,6 @@
 <?php
 
-namespace Nero\ValeExpress\Http\Requests;
+namespace Nero\Evale\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
@@ -23,11 +23,13 @@ class EmployeeFormRequest extends FormRequest
      */
     public function rules()
     {
+        $companyId = $this->user()->id ?? 0;
+
         $rules = [
             'name' => 'required',
             'cpf' => "required|unique:employees,cpf,{$this->employeeId}",
-            'registration_number' => 'nullable',
-            'consumption_limit' => 'required',
+            'registration_number' => "required|unique:employees,registration_number,{$this->employeeId}",
+            'consumption_limit' => "required|subscription_limit:{$companyId},{$this->employeeId}",
         ];
 
         if ($this->method() == 'POST') {
@@ -46,6 +48,7 @@ class EmployeeFormRequest extends FormRequest
     {
         return [
             'cpf.unique' => 'CPF informado já existe',
+            'registration_number.unique' => 'Número de matricula informado já existe',
         ];
     }
 }

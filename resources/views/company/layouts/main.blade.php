@@ -12,7 +12,8 @@
                     <span class="icon-bar"></span>
                 </button>
                 <a class="navbar-brand" href="{{ route('company.index') }}">
-                    <b>{{ config('app.name') }}</b>
+                    <img src="{{ asset('img/LOGO_ASSINATURA.svg') }}" class="navbar-logo">
+                    <b>VALE</b>
                 </a>
             </div>
             <!-- /.navbar-header -->

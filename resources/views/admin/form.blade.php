@@ -64,7 +64,7 @@
                     </div>
                     @endempty
                     <button type="submit" class="btn btn-primary">Salvar</button>
-                    <button type="reset" class="btn btn-default">Cancelar</button>
+                    <a class="btn btn-default" href="{{ route('admin.index') }}">Cancelar</a>
                 </form>
             </div>
         </div>

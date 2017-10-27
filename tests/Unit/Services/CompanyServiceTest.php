@@ -1,15 +1,15 @@
 <?php
 
-namespace Tests\Nero\ValeExpress\Services;
+namespace Tests\Nero\Evale\Services;
 
 use Mockery;
-use Nero\ValeExpress\Models\Company;
-use Nero\ValeExpress\Repositories\CompanyRepository;
-use Nero\ValeExpress\Services\CompanyService;
+use Nero\Evale\Models\Company;
+use Nero\Evale\Repositories\CompanyRepository;
+use Nero\Evale\Services\CompanyService;
 use Tests\TestCase;
 
 /**
- * @coversDefaultClass \Nero\ValeExpress\Services\CompanyService
+ * @coversDefaultClass \Nero\Evale\Services\CompanyService
  */
 class CompanyServiceTest extends TestCase
 {

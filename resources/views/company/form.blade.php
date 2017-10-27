@@ -40,7 +40,7 @@
                     </div>
                     <div class="form-group">
                         <label for="registration_number">Matrícula ID</label>
-                        <input id="registration_number" name="registration_number" value="{{ $registration_number ?? old('registration_number') }}" class="form-control" maxlength="14">
+                        <input id="registration_number" name="registration_number" value="{{ $registration_number ?? old('registration_number') }}" class="form-control" maxlength="14" required>
                     </div>
                     <div class="form-group">
                         <label for="consumption_limit">Limite de consumo</label>
@@ -56,7 +56,7 @@
                     </div>
                     @endempty
                     <button type="submit" class="btn btn-primary">Salvar</button>
-                    <button type="reset" class="btn btn-default">Cancelar</button>
+                    <a class="btn btn-default" href="{{ route('company.index') }}">Cancelar</a>
                 </form>
             </div>
         </div>

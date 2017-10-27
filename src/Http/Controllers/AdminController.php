@@ -1,22 +1,22 @@
 <?php
 
-namespace Nero\ValeExpress\Http\Controllers;
+namespace Nero\Evale\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
-use Nero\ValeExpress\Http\Requests\CompanyFormRequest;
-use Nero\ValeExpress\Services\CompanyService;
-use Nero\ValeExpress\Services\EmployeeService;
+use Nero\Evale\Http\Requests\CompanyFormRequest;
+use Nero\Evale\Services\CompanyService;
+use Nero\Evale\Services\EmployeeService;
 
 class AdminController extends Controller
 {
     /**
-     * @var \Nero\ValeExpress\Services\CompanyService
+     * @var \Nero\Evale\Services\CompanyService
      */
     protected $companyService;
 
     /**
-     * @var \Nero\ValeExpress\Services\EmployeeService
+     * @var \Nero\Evale\Services\EmployeeService
      */
     protected $employeeService;
 

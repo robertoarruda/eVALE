@@ -1,6 +1,6 @@
 <?php
 
-namespace Nero\ValeExpress\Models;
+namespace Nero\Evale\Models;
 
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;

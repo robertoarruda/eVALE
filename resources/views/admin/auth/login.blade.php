@@ -3,8 +3,10 @@
     <div class="container">
         <div class="row" style="margin-top: 100px;">
             <div class="col-md-4 col-md-offset-4">
-                @component('example.widgets.panel')
-                    @slot ('panelTitle', 'Login')
+                @component('admin.widgets.panel')
+                    @slot('panelLogo')
+                        <div src="{{ asset('img/LOGO.svg') }}" class="login-logo"></div>
+                    @endslot
                     @slot ('panelBody')
                         <form class="form-horizontal" role="form" method="POST" action="{{ route('admin.login') }}">
                             {{ csrf_field() }}
