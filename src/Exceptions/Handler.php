@@ -1,6 +1,6 @@
 <?php
 
-namespace Nero\ValeExpress\Exceptions;
+namespace Nero\Evale\Exceptions;
 
 use App\Exceptions\Handler as BaseHandler;
 use Illuminate\Auth\AuthenticationException;

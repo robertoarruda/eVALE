@@ -18,7 +18,7 @@ class CreateEmployeesTable extends Migration
             $table->integer('company_id')->unsigned();
             $table->string('name', 100)->index();
             $table->string('cpf', 11)->unique();
-            $table->string('registration_number')->nullable();
+            $table->string('registration_number')->unique();
             $table->decimal('consumption_limit', 8, 2);
             $table->string('password');
             $table->timestamps();

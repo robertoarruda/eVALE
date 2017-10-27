@@ -1,6 +1,6 @@
 <?php
 
-namespace Nero\ValeExpress\Repositories;
+namespace Nero\Evale\Repositories;
 
 abstract class Repository
 {

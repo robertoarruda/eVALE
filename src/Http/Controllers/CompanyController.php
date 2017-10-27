@@ -1,22 +1,22 @@
 <?php
 
-namespace Nero\ValeExpress\Http\Controllers;
+namespace Nero\Evale\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
-use Nero\ValeExpress\Http\Requests\EmployeeFormRequest;
-use Nero\ValeExpress\Services\CompanyService;
-use Nero\ValeExpress\Services\EmployeeService;
+use Nero\Evale\Http\Requests\EmployeeFormRequest;
+use Nero\Evale\Services\CompanyService;
+use Nero\Evale\Services\EmployeeService;
 
 class CompanyController extends Controller
 {
     /**
-     * @var \Nero\ValeExpress\Services\CompanyService
+     * @var \Nero\Evale\Services\CompanyService
      */
     protected $companyService;
 
     /**
-     * @var \Nero\ValeExpress\Services\EmployeeService
+     * @var \Nero\Evale\Services\EmployeeService
      */
     protected $employeeService;
 
@@ -40,13 +40,7 @@ class CompanyController extends Controller
     {
         $companyId = $request->user()->id ?? 0;
 
-        $subscriptionLimit = $this->companyService
-            ->find(['id' => $companyId])->first()->subscription_limit ?? 0;
-
-        $totalConsumptionLimit = $this->employeeService
-            ->sum('consumption_limit', ['company_id' => $companyId]) ?? 0;
-
-        $remainingSubscription = $subscriptionLimit - $totalConsumptionLimit;
+        $remainingSubscription = $this->employeeService->remainingSubscription($companyId);
 
         $index = [
             'list' => $this->employeeService->find(['company_id' => $companyId]),

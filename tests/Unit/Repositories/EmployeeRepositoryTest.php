@@ -1,14 +1,14 @@
 <?php
 
-namespace Tests\Nero\ValeExpress\Repositories;
+namespace Tests\Nero\Evale\Repositories;
 
 use Mockery;
-use Nero\ValeExpress\Models\Employee;
-use Nero\ValeExpress\Repositories\EmployeeRepository;
+use Nero\Evale\Models\Employee;
+use Nero\Evale\Repositories\EmployeeRepository;
 use Tests\TestCase;
 
 /**
- * @coversDefaultClass \Nero\ValeExpress\Repositories\EmployeeRepository
+ * @coversDefaultClass \Nero\Evale\Repositories\EmployeeRepository
  */
 class EmployeeRepositoryTest extends TestCase
 {

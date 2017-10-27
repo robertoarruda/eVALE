@@ -1,8 +1,8 @@
 <?php
 
-namespace Nero\ValeExpress\Repositories;
+namespace Nero\Evale\Repositories;
 
-use Nero\ValeExpress\Models\Company;
+use Nero\Evale\Models\Company;
 
 class CompanyRepository extends Repository
 {

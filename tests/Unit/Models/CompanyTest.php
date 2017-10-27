@@ -1,14 +1,14 @@
 <?php
 
-namespace Tests\Nero\ValeExpress\Models;
+namespace Tests\Nero\Evale\Models;
 
 use Illuminate\Foundation\Testing\DatabaseMigrations;
-use Nero\ValeExpress\Models\Company;
-use Nero\ValeExpress\Models\Employee;
+use Nero\Evale\Models\Company;
+use Nero\Evale\Models\Employee;
 use Tests\TestCase;
 
 /**
- * @coversDefaultClass \Nero\ValeExpress\Models\Company
+ * @coversDefaultClass \Nero\Evale\Models\Company
  */
 class CompanyTest extends TestCase
 {

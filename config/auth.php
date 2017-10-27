@@ -75,11 +75,11 @@ return [
     'providers' => [
         'users' => [
             'driver' => 'eloquent',
-            'model' => Nero\ValeExpress\Models\User::class,
+            'model' => Nero\Evale\Models\User::class,
         ],
         'companies' => [
             'driver' => 'eloquent',
-            'model' => Nero\ValeExpress\Models\Company::class,
+            'model' => Nero\Evale\Models\Company::class,
         ],
 
         // 'users' => [
