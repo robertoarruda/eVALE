@@ -2,74 +2,20 @@
 
 namespace Nero\Evale\Http\Controllers;
 
-use App\Http\Controllers\Controller;
-use Illuminate\Foundation\Auth\AuthenticatesUsers;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Nero\Evale\Http\Controllers\LoginController;
 
-class AdminLoginController extends Controller
+class AdminLoginController extends LoginController
 {
-    use AuthenticatesUsers;
-
     /**
      * Create a new controller instance.
      *
      * @return void
      */
-    public function __construct()
+    public function __construct(Auth $auth)
     {
+        $this->guard = 'admin';
+        $this->auth = $auth;
         $this->middleware('guest')->except('logout');
-    }
-
-    /**
-     * @see Illuminate\Foundation\Auth::showLoginForm()
-     */
-    public function showLoginForm()
-    {
-        if (Auth::guard('admin')->check()) {
-            return redirect()->route('admin.index');
-        }
-
-        if (Auth::guard('company')->check()) {
-            return redirect()->route('company.index');
-        }
-
-        return view('admin.auth.login');
-    }
-
-    /**
-     * @see Illuminate\Foundation\Auth::redirectTo()
-     */
-    protected function redirectTo()
-    {
-        return '/admin';
-    }
-
-    /**
-     * @see Illuminate\Foundation\Auth::username()
-     */
-    public function username()
-    {
-        return 'login';
-    }
-
-    /**
-     * @see Illuminate\Foundation\Auth::logout()
-     */
-    public function logout(Request $request)
-    {
-        $this->guard('admin')->logout();
-
-        $request->session()->invalidate();
-
-        return redirect()->route('admin.index');
-    }
-
-    /**
-     * @see Illuminate\Foundation\Auth::guard()
-     */
-    protected function guard()
-    {
-        return Auth::guard('admin');
     }
 }

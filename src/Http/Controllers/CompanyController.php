@@ -40,7 +40,7 @@ class CompanyController extends Controller
     {
         $companyId = $request->user()->id ?? 0;
 
-        $remainingSubscription = $this->employeeService->companyRemainingSubscription($companyId);
+        $remainingSubscription = $this->companyService->remainingSubscription($companyId);
 
         $index = [
             'list' => $this->employeeService->find(['company_id' => $companyId]),
