@@ -75,8 +75,8 @@ class CompanyControllerTest extends TestCase
             ->once()
             ->andReturn($companies);
 
-        $this->dependencies['employeeService']
-            ->shouldReceive('companyRemainingSubscription')
+        $this->dependencies['companyService']
+            ->shouldReceive('remainingSubscription')
             ->with($user->id)
             ->once()
             ->andReturn($remainingSubscription);
