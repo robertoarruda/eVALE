@@ -18,7 +18,7 @@ class EmployeeServiceTest extends TestCase
     public function setUp()
     {
         $this->dependencies = [
-            'employeeRepository' => Mockery::mock(EmployeeRepository::class),
+            EmployeeRepository::class => Mockery::mock(EmployeeRepository::class),
         ];
 
         parent::setUp();
@@ -41,7 +41,7 @@ class EmployeeServiceTest extends TestCase
     {
         $employee = factory(Employee::class)->make();
 
-        $this->dependencies['employeeRepository']
+        $this->dependencies[EmployeeRepository::class]
             ->shouldReceive('count')
             ->with($employee->toArray())
             ->once()
@@ -60,7 +60,7 @@ class EmployeeServiceTest extends TestCase
     {
         $employee = factory(Employee::class)->make();
 
-        $this->dependencies['employeeRepository']
+        $this->dependencies[EmployeeRepository::class]
             ->shouldReceive('sum')
             ->with('field', $employee->toArray())
             ->once()
@@ -79,7 +79,7 @@ class EmployeeServiceTest extends TestCase
     {
         $employee = factory(Employee::class)->make();
 
-        $this->dependencies['employeeRepository']
+        $this->dependencies[EmployeeRepository::class]
             ->shouldReceive('create')
             ->with($employee->toArray())
             ->once()
@@ -98,7 +98,7 @@ class EmployeeServiceTest extends TestCase
     {
         $employee = factory(Employee::class)->make(['id' => 1]);
 
-        $this->dependencies['employeeRepository']
+        $this->dependencies[EmployeeRepository::class]
             ->shouldReceive('find')
             ->with(['id' => 1])
             ->once()
@@ -117,7 +117,7 @@ class EmployeeServiceTest extends TestCase
     {
         $employee = factory(Employee::class)->make(['id' => 1]);
 
-        $this->dependencies['employeeRepository']
+        $this->dependencies[EmployeeRepository::class]
             ->shouldReceive('findById')
             ->with(1)
             ->once()
@@ -136,7 +136,7 @@ class EmployeeServiceTest extends TestCase
     {
         $employee = factory(Employee::class)->make(['id' => 1]);
 
-        $this->dependencies['employeeRepository']
+        $this->dependencies[EmployeeRepository::class]
             ->shouldReceive('update')
             ->with(1, $employee->toArray())
             ->once()
@@ -155,7 +155,7 @@ class EmployeeServiceTest extends TestCase
     {
         $employee = Mockery::mock(Employee::class);
 
-        $this->dependencies['employeeRepository']
+        $this->dependencies[EmployeeRepository::class]
             ->shouldReceive('delete')
             ->with(1)
             ->once()

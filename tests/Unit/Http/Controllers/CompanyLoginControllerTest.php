@@ -8,16 +8,16 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 use Mockery;
-use Nero\Evale\Http\Controllers\AdminLoginController;
+use Nero\Evale\Http\Controllers\CompanyLoginController;
 use Tests\TestCase;
 use View;
 
 /**
- * @coversDefaultClass \Nero\Evale\Http\Controllers\AdminLoginController
+ * @coversDefaultClass \Nero\Evale\Http\Controllers\CompanyLoginController
  */
-class AdminLoginControllerTest extends TestCase
+class CompanyLoginControllerTest extends TestCase
 {
-    protected $testedClassName = AdminLoginController::class;
+    protected $testedClassName = CompanyLoginController::class;
 
     protected $activeReflection = true;
 
@@ -41,9 +41,9 @@ class AdminLoginControllerTest extends TestCase
      */
     public function testConstruct()
     {
-        $testedClass = new AdminLoginController(...array_values($this->dependencies));
+        $testedClass = new CompanyLoginController(...array_values($this->dependencies));
 
-        $this->assertInstanceOf(AdminLoginController::class, $testedClass);
+        $this->assertInstanceOf(CompanyLoginController::class, $testedClass);
     }
 
     /**
@@ -76,7 +76,7 @@ class AdminLoginControllerTest extends TestCase
             ->andReturn(false);
 
         View::shouldReceive('make')
-            ->with('admin.auth.login', [], [])
+            ->with('company.auth.login', [], [])
             ->once()
             ->andReturn($this->otherDependencies[Response::class]);
 
@@ -114,7 +114,7 @@ class AdminLoginControllerTest extends TestCase
             ->never();
 
         View::shouldReceive('make')
-            ->with('admin.auth.login', [], [])
+            ->with('company.auth.login', [], [])
             ->never();
 
         $this->assertInstanceOf(
@@ -153,7 +153,7 @@ class AdminLoginControllerTest extends TestCase
             ->andReturn(true);
 
         View::shouldReceive('make')
-            ->with('admin.auth.login', [], [])
+            ->with('company.auth.login', [], [])
             ->never();
 
         $this->assertInstanceOf(
@@ -171,7 +171,7 @@ class AdminLoginControllerTest extends TestCase
         $method->setAccessible(true);
 
         $this->assertEquals(
-            '/admin',
+            '/company',
             $method->invoke($this->testedClass)
         );
     }
@@ -194,7 +194,7 @@ class AdminLoginControllerTest extends TestCase
     {
         $this->dependencies[Auth::class]
             ->shouldReceive('guard')
-            ->with('admin')
+            ->with('company')
             ->once()
             ->andReturn($this->otherDependencies[SessionGuard::class]);
 
@@ -219,7 +219,7 @@ class AdminLoginControllerTest extends TestCase
     {
         $this->dependencies[Auth::class]
             ->shouldReceive('guard')
-            ->with('admin')
+            ->with('company')
             ->once()
             ->andReturn($this->otherDependencies[SessionGuard::class]);
 

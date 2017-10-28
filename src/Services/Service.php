@@ -68,6 +68,10 @@ abstract class Service
      */
     public function update(int $entityId, array $data)
     {
+        if (empty($data['password'])) {
+            unset($data['password']);
+        }
+
         return $this->repository->update($entityId, $data);
     }
 

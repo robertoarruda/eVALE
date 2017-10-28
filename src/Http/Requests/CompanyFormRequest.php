@@ -3,6 +3,7 @@
 namespace Nero\Evale\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Http\Request;
 
 class CompanyFormRequest extends FormRequest
 {
@@ -21,9 +22,9 @@ class CompanyFormRequest extends FormRequest
      *
      * @return array
      */
-    public function rules()
+    public function rules(Request $request)
     {
-        $companyId = $this->companyId ?? 0;
+        $companyId = $request->companyId ?? 0;
 
         $rules = [
             'name' => 'required',
@@ -34,8 +35,8 @@ class CompanyFormRequest extends FormRequest
             'login' => "required|unique:companies,login,{$companyId}",
         ];
 
-        if ($this->method() == 'POST') {
-            $rules['password'] = 'required';
+        if (!empty($request->password)) {
+            $rules['password'] = 'confirmed';
         }
 
         return $rules;
@@ -49,8 +50,9 @@ class CompanyFormRequest extends FormRequest
     public function messages()
     {
         return [
-            'cnpj.unique' => 'CNPJ informado já existe',
-            'login.unique' => 'Login informado já existe',
+            'cnpj.unique' => 'CNPJ informado já existe.',
+            'login.unique' => 'Login informado já existe.',
+            'password.confirmed' => 'Confirmação da senha não confere.',
         ];
     }
 }
