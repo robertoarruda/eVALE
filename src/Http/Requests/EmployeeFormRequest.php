@@ -3,6 +3,7 @@
 namespace Nero\Evale\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Http\Request;
 
 class EmployeeFormRequest extends FormRequest
 {
@@ -21,10 +22,10 @@ class EmployeeFormRequest extends FormRequest
      *
      * @return array
      */
-    public function rules()
+    public function rules(Request $request)
     {
-        $employeeId = $this->employeeId ?? 0;
-        $companyId = $this->user()->id ?? 0;
+        $employeeId = $request->employeeId ?? 0;
+        $companyId = $request->user()->id ?? 0;
 
         $rules = [
             'name' => 'required',
@@ -33,8 +34,8 @@ class EmployeeFormRequest extends FormRequest
             'consumption_limit' => "required|subscription_limit:{$companyId},{$employeeId}",
         ];
 
-        if ($this->method() == 'POST') {
-            $rules['password'] = 'required';
+        if (!empty($request->password)) {
+            $rules['password'] = 'confirmed';
         }
 
         return $rules;
@@ -48,8 +49,9 @@ class EmployeeFormRequest extends FormRequest
     public function messages()
     {
         return [
-            'cpf.unique' => 'CPF informado já existe',
-            'registration_number.unique' => 'Número de matricula informado já existe',
+            'cpf.unique' => 'CPF informado já existe.',
+            'registration_number.unique' => 'Número de matricula informado já existe.',
+            'password.confirmed' => 'Confirmação da senha não confere.',
         ];
     }
 }

@@ -3,23 +3,40 @@
 namespace Tests;
 
 use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
-use Mockery;
 use ReflectionClass;
 
 abstract class TestCase extends BaseTestCase
 {
     use CreatesApplication;
 
+    /**
+     * @var mixed
+     */
     protected $testedClass;
 
+    /**
+     * @var string
+     */
     protected $testedClassName;
 
+    /**
+     * @var array
+     */
     protected $dependencies = [];
 
+    /**
+     * @var array
+     */
     protected $otherDependencies = [];
 
+    /**
+     * @var ReflectionClass
+     */
     protected $reflection;
 
+    /**
+     * @var boolean
+     */
     protected $activeReflection = false;
 
     public function setUp()

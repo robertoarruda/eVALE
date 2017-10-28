@@ -17,7 +17,7 @@ class EmployeeRepositoryTest extends TestCase
     public function setUp()
     {
         $this->dependencies = [
-            'employee' => Mockery::mock(Employee::class),
+            Employee::class => Mockery::mock(Employee::class),
         ];
 
         parent::setUp();
@@ -40,7 +40,7 @@ class EmployeeRepositoryTest extends TestCase
     {
         $employee = factory(Employee::class, 1)->make();
 
-        $this->dependencies['employee']
+        $this->dependencies[Employee::class]
             ->shouldReceive('where->count')
             ->with(['id' => 1])
             ->with()
@@ -60,7 +60,7 @@ class EmployeeRepositoryTest extends TestCase
     {
         $employee = factory(Employee::class, 1)->make();
 
-        $this->dependencies['employee']
+        $this->dependencies[Employee::class]
             ->shouldReceive('where->sum')
             ->with(['id' => 1])
             ->with('field')
@@ -80,7 +80,7 @@ class EmployeeRepositoryTest extends TestCase
     {
         $employee = factory(Employee::class, 1)->make();
 
-        $this->dependencies['employee']
+        $this->dependencies[Employee::class]
             ->shouldReceive('where->get')
             ->with(['id' => 1])
             ->with()
@@ -100,7 +100,7 @@ class EmployeeRepositoryTest extends TestCase
     {
         $employee = factory(Employee::class)->make();
 
-        $this->dependencies['employee']
+        $this->dependencies[Employee::class]
             ->shouldReceive('find')
             ->with(1)
             ->once()
@@ -119,7 +119,7 @@ class EmployeeRepositoryTest extends TestCase
     {
         $employee = factory(Employee::class)->make();
 
-        $this->dependencies['employee']
+        $this->dependencies[Employee::class]
             ->shouldReceive('create')
             ->with($employee->toArray())
             ->once()
@@ -138,7 +138,7 @@ class EmployeeRepositoryTest extends TestCase
     {
         $employee = factory(Employee::class)->make();
 
-        $this->dependencies['employee']
+        $this->dependencies[Employee::class]
             ->shouldReceive('where->first->fill->save')
             ->with('id', 1)
             ->with()
@@ -158,12 +158,12 @@ class EmployeeRepositoryTest extends TestCase
      */
     public function testDelete()
     {
-        $this->dependencies['employee']
+        $this->dependencies[Employee::class]
             ->shouldReceive('where->delete')
             ->with('id', 1)
             ->with()
             ->once()
-            ->andReturn($this->dependencies['employee']);
+            ->andReturn($this->dependencies[Employee::class]);
 
         $this->assertInstanceOf(
             Employee::class,

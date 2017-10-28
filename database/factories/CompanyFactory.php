@@ -24,7 +24,7 @@ $factory->define(Nero\Evale\Models\Company::class, function (Faker $faker) {
         'subscription_limit' => $faker->randomFloat(2, 0, 100000),
         'remember_token' => str_random(10),
         'login' => strtolower($faker->firstName),
-        'password' => $password ?: $password = bcrypt('secret'),
+        'password' => $password ?: $password = bcrypt($faker->password(6, 8)),
         'remember_token' => str_random(10),
     ];
 });
