@@ -5,7 +5,6 @@ namespace Tests\Nero\Evale\Exceptions;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Contracts\Container\Container;
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
 use Mockery;
 use Nero\Evale\Exceptions\Handler;
 use Tests\TestCase;
@@ -23,13 +22,12 @@ class HandlerTest extends TestCase
     public function setUp()
     {
         $this->otherDependencies = [
-            'request' => Mockery::mock(Request::class),
-            'response' => Mockery::mock(Response::class),
-            'authenticationException' => Mockery::mock(AuthenticationException::class),
+            Request::class => Mockery::mock(Request::class),
+            AuthenticationException::class => Mockery::mock(AuthenticationException::class),
         ];
 
         $this->dependencies = [
-            'container' => Mockery::mock(Container::class),
+            Container::class => Mockery::mock(Container::class),
         ];
 
         parent::setUp();
@@ -43,7 +41,7 @@ class HandlerTest extends TestCase
         $method = $this->reflection->getMethod('unauthenticated');
         $method->setAccessible(true);
 
-        $this->otherDependencies['request']
+        $this->otherDependencies[Request::class]
             ->shouldReceive('route')
             ->with()
             ->once()
@@ -68,12 +66,12 @@ class HandlerTest extends TestCase
             ->shouldReceive('getRequest')
             ->with()
             ->once()
-            ->andReturn($this->otherDependencies['request']);
+            ->andReturn($this->otherDependencies[Request::class]);
 
         $method->invoke(
             $this->testedClass,
-            $this->otherDependencies['request'],
-            $this->otherDependencies['authenticationException']
+            $this->otherDependencies[Request::class],
+            $this->otherDependencies[AuthenticationException::class]
         );
     }
 
@@ -85,7 +83,7 @@ class HandlerTest extends TestCase
         $method = $this->reflection->getMethod('unauthenticated');
         $method->setAccessible(true);
 
-        $this->otherDependencies['request']
+        $this->otherDependencies[Request::class]
             ->shouldReceive('route')
             ->with()
             ->once()
@@ -101,8 +99,8 @@ class HandlerTest extends TestCase
 
         $method->invoke(
             $this->testedClass,
-            $this->otherDependencies['request'],
-            $this->otherDependencies['authenticationException']
+            $this->otherDependencies[Request::class],
+            $this->otherDependencies[AuthenticationException::class]
         );
     }
 
@@ -114,7 +112,7 @@ class HandlerTest extends TestCase
         $method = $this->reflection->getMethod('unauthenticated');
         $method->setAccessible(true);
 
-        $this->otherDependencies['request']
+        $this->otherDependencies[Request::class]
             ->shouldReceive('route')
             ->with()
             ->once()
@@ -139,12 +137,12 @@ class HandlerTest extends TestCase
             ->shouldReceive('getRequest')
             ->with()
             ->once()
-            ->andReturn($this->otherDependencies['request']);
+            ->andReturn($this->otherDependencies[Request::class]);
 
         $method->invoke(
             $this->testedClass,
-            $this->otherDependencies['request'],
-            $this->otherDependencies['authenticationException']
+            $this->otherDependencies[Request::class],
+            $this->otherDependencies[AuthenticationException::class]
         );
     }
 }

@@ -24,14 +24,14 @@ class AdminControllerTest extends TestCase
     public function setUp()
     {
         $this->otherDependencies = [
-            'request' => Mockery::mock(Request::class),
-            'response' => Mockery::mock(Response::class),
-            'companyFormRequest' => Mockery::mock(CompanyFormRequest::class),
+            Request::class => Mockery::mock(Request::class),
+            Response::class => Mockery::mock(Response::class),
+            CompanyFormRequest::class => Mockery::mock(CompanyFormRequest::class),
         ];
 
         $this->dependencies = [
-            'companyService' => Mockery::mock(CompanyService::class),
-            'employeeService' => Mockery::mock(EmployeeService::class),
+            CompanyService::class => Mockery::mock(CompanyService::class),
+            EmployeeService::class => Mockery::mock(EmployeeService::class),
         ];
 
         parent::setUp();
@@ -60,25 +60,25 @@ class AdminControllerTest extends TestCase
         $companies = factory(Company::class, $companiesCount)
             ->make(['subscription_limit' => $subscriptionLimit]);
 
-        $this->dependencies['companyService']
+        $this->dependencies[CompanyService::class]
             ->shouldReceive('find')
             ->with()
             ->once()
             ->andReturn($companies);
 
-        $this->dependencies['companyService']
+        $this->dependencies[CompanyService::class]
             ->shouldReceive('sum')
             ->with('subscription_limit')
             ->once()
             ->andReturn($subscriptionsTotal);
 
-        $this->dependencies['companyService']
+        $this->dependencies[CompanyService::class]
             ->shouldReceive('count')
             ->with()
             ->once()
             ->andReturn($companiesCount);
 
-        $this->dependencies['employeeService']
+        $this->dependencies[EmployeeService::class]
             ->shouldReceive('count')
             ->with()
             ->once()
@@ -94,11 +94,11 @@ class AdminControllerTest extends TestCase
         View::shouldReceive('make')
             ->with('admin.index', $index, [])
             ->once()
-            ->andReturn($this->otherDependencies['response']);
+            ->andReturn($this->otherDependencies[Response::class]);
 
         $this->assertInstanceOf(
             Response::class,
-            $this->testedClass->index($this->otherDependencies['request'])
+            $this->testedClass->index($this->otherDependencies[Request::class])
         );
     }
 
@@ -110,7 +110,7 @@ class AdminControllerTest extends TestCase
         View::shouldReceive('make')
             ->with('admin.form', [], [])
             ->once()
-            ->andReturn($this->otherDependencies['response']);
+            ->andReturn($this->otherDependencies[Response::class]);
 
         $this->assertInstanceOf(
             Response::class,
@@ -127,20 +127,20 @@ class AdminControllerTest extends TestCase
             ->make()
             ->toArray();
 
-        $this->otherDependencies['companyFormRequest']
+        $this->otherDependencies[CompanyFormRequest::class]
             ->shouldReceive('all')
             ->with()
             ->once()
             ->andReturn($request);
 
-        $this->dependencies['companyService']
+        $this->dependencies[CompanyService::class]
             ->shouldReceive('create')
             ->with($request)
             ->once();
 
         $this->assertInstanceOf(
             RedirectResponse::class,
-            $this->testedClass->store($this->otherDependencies['companyFormRequest'])
+            $this->testedClass->store($this->otherDependencies[CompanyFormRequest::class])
         );
     }
 
@@ -163,7 +163,7 @@ class AdminControllerTest extends TestCase
         $entityId = 1;
 
         $company = factory(Company::class)->make();
-        $this->dependencies['companyService']
+        $this->dependencies[CompanyService::class]
             ->shouldReceive('findById')
             ->with($entityId)
             ->once()
@@ -172,11 +172,11 @@ class AdminControllerTest extends TestCase
         View::shouldReceive('make')
             ->with('admin.form', $company->toArray(), [])
             ->once()
-            ->andReturn($this->otherDependencies['response']);
+            ->andReturn($this->otherDependencies[Response::class]);
 
         $this->assertInstanceOf(
             Response::class,
-            $this->testedClass->edit($this->otherDependencies['request'], $entityId)
+            $this->testedClass->edit($this->otherDependencies[Request::class], $entityId)
         );
     }
 
@@ -187,7 +187,7 @@ class AdminControllerTest extends TestCase
     {
         $entityId = 1;
 
-        $this->otherDependencies['companyFormRequest']
+        $this->otherDependencies[CompanyFormRequest::class]
             ->shouldReceive('merge')
             ->with()
             ->once();
@@ -196,20 +196,20 @@ class AdminControllerTest extends TestCase
             ->make()
             ->toArray();
 
-        $this->otherDependencies['companyFormRequest']
+        $this->otherDependencies[CompanyFormRequest::class]
             ->shouldReceive('all')
             ->with()
             ->once()
             ->andReturn($request);
 
-        $this->dependencies['companyService']
+        $this->dependencies[CompanyService::class]
             ->shouldReceive('update')
             ->with($entityId, $request)
             ->once();
 
         $this->assertInstanceOf(
             RedirectResponse::class,
-            $this->testedClass->update($this->otherDependencies['companyFormRequest'], $entityId)
+            $this->testedClass->update($this->otherDependencies[CompanyFormRequest::class], $entityId)
         );
     }
 
@@ -220,7 +220,7 @@ class AdminControllerTest extends TestCase
     {
         $entityId = 1;
 
-        $this->dependencies['companyService']
+        $this->dependencies[CompanyService::class]
             ->shouldReceive('delete')
             ->with($entityId)
             ->once();
