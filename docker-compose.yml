@@ -25,6 +25,7 @@ services:
         restart: always
         volumes:
             - "./docker/php/php.ini:/usr/local/etc/php/conf.d/php.ini"
+            - "./docker/ssh:/root/.ssh"
             - ".:/var/www/html/eVALE"
         ports:
             - "9000:9000"
