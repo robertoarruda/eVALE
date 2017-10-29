@@ -67,10 +67,9 @@ docker-compose up -d
  - Senha: docker
 - New >> Inserir nome [evale] >> Criar
 
-
 ## Deploy
 ```
-docker exec -ti php.docker sh "/var/www/html/eVALE/deploy.sh" &&  npm install && npm run dev
+docker exec -ti php.docker sh "/var/www/html/eVALE/deploy.sh" && npm install && npm run dev
 ```
 
 # Acessar
