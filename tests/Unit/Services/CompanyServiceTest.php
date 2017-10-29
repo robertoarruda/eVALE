@@ -4,6 +4,7 @@ namespace Tests\Nero\Evale\Services;
 
 use Mockery;
 use Nero\Evale\Models\Company;
+use Nero\Evale\Models\Employee;
 use Nero\Evale\Repositories\CompanyRepository;
 use Nero\Evale\Services\CompanyService;
 use Tests\TestCase;
@@ -18,7 +19,7 @@ class CompanyServiceTest extends TestCase
     public function setUp()
     {
         $this->dependencies = [
-            'companyRepository' => Mockery::mock(CompanyRepository::class),
+            CompanyRepository::class => Mockery::mock(CompanyRepository::class),
         ];
 
         parent::setUp();
@@ -35,13 +36,30 @@ class CompanyServiceTest extends TestCase
     }
 
     /**
+     * @covers ::remainingSubscription
+     */
+    public function testRemainingSubscription()
+    {
+        $company = factory(Company::class)->make(['id' => 1, 'subscription_limit' => 60]);
+        $company->employees = factory(Employee::class, 5)->make(['consumption_limit' => 10]);
+
+        $this->dependencies[CompanyRepository::class]
+            ->shouldReceive('findById')
+            ->with(1)
+            ->once()
+            ->andReturn($company);
+
+        $this->assertEquals(10, $this->testedClass->remainingSubscription(1));
+    }
+
+    /**
      * @covers ::count
      */
     public function testCount()
     {
         $company = factory(Company::class)->make();
 
-        $this->dependencies['companyRepository']
+        $this->dependencies[CompanyRepository::class]
             ->shouldReceive('count')
             ->with($company->toArray())
             ->once()
@@ -60,7 +78,7 @@ class CompanyServiceTest extends TestCase
     {
         $company = factory(Company::class)->make();
 
-        $this->dependencies['companyRepository']
+        $this->dependencies[CompanyRepository::class]
             ->shouldReceive('sum')
             ->with('field', $company->toArray())
             ->once()
@@ -79,7 +97,7 @@ class CompanyServiceTest extends TestCase
     {
         $company = factory(Company::class)->make();
 
-        $this->dependencies['companyRepository']
+        $this->dependencies[CompanyRepository::class]
             ->shouldReceive('create')
             ->with($company->toArray())
             ->once()
@@ -98,7 +116,7 @@ class CompanyServiceTest extends TestCase
     {
         $company = factory(Company::class)->make(['id' => 1]);
 
-        $this->dependencies['companyRepository']
+        $this->dependencies[CompanyRepository::class]
             ->shouldReceive('find')
             ->with(['id' => 1])
             ->once()
@@ -117,7 +135,7 @@ class CompanyServiceTest extends TestCase
     {
         $company = factory(Company::class)->make(['id' => 1]);
 
-        $this->dependencies['companyRepository']
+        $this->dependencies[CompanyRepository::class]
             ->shouldReceive('findById')
             ->with(1)
             ->once()
@@ -136,7 +154,7 @@ class CompanyServiceTest extends TestCase
     {
         $company = factory(Company::class)->make(['id' => 1]);
 
-        $this->dependencies['companyRepository']
+        $this->dependencies[CompanyRepository::class]
             ->shouldReceive('update')
             ->with(1, $company->toArray())
             ->once()
@@ -155,7 +173,7 @@ class CompanyServiceTest extends TestCase
     {
         $company = Mockery::mock(Company::class);
 
-        $this->dependencies['companyRepository']
+        $this->dependencies[CompanyRepository::class]
             ->shouldReceive('delete')
             ->with(1)
             ->once()

@@ -57,12 +57,14 @@
                         <label for="login">Login</label>
                         <input id="login" name="login" value="{{ $login ?? old('login') }}" class="form-control" maxlength="10" required>
                     </div>
-                    @empty($id)
                     <div class="form-group">
                         <label for="password">Senha</label>
-                        <input type="password" id="password" name="password" class="form-control" minlength="6" maxlength="8" required>
+                        <input type="password" id="password" name="password" class="form-control" minlength="6" maxlength="8">
                     </div>
-                    @endempty
+                    <div class="form-group">
+                        <label for="password_confirmation">Confirmação de senha</label>
+                        <input type="password" id="password_confirmation" name="password_confirmation" class="form-control" minlength="6" maxlength="8">
+                    </div>
                     <button type="submit" class="btn btn-primary">Salvar</button>
                     <a class="btn btn-default" href="{{ route('admin.index') }}">Cancelar</a>
                 </form>

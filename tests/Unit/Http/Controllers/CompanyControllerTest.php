@@ -26,14 +26,14 @@ class CompanyControllerTest extends TestCase
     public function setUp()
     {
         $this->otherDependencies = [
-            'request' => Mockery::mock(Request::class),
-            'response' => Mockery::mock(Response::class),
-            'employeeFormRequest' => Mockery::mock(EmployeeFormRequest::class),
+            Request::class => Mockery::mock(Request::class),
+            Response::class => Mockery::mock(Response::class),
+            EmployeeFormRequest::class => Mockery::mock(EmployeeFormRequest::class),
         ];
 
         $this->dependencies = [
-            'companyService' => Mockery::mock(CompanyService::class),
-            'employeeService' => Mockery::mock(EmployeeService::class),
+            CompanyService::class => Mockery::mock(CompanyService::class),
+            EmployeeService::class => Mockery::mock(EmployeeService::class),
         ];
 
         parent::setUp();
@@ -60,7 +60,7 @@ class CompanyControllerTest extends TestCase
         $remainingSubscription = $subscriptionLimit - $totalConsumptionLimit;
 
         $user = factory(User::class)->make(['id' => 1]);
-        $this->otherDependencies['request']
+        $this->otherDependencies[Request::class]
             ->shouldReceive('user')
             ->with()
             ->once()
@@ -69,25 +69,25 @@ class CompanyControllerTest extends TestCase
         $companies = factory(Company::class, $employeesCount)
             ->make(['subscription_limit' => $subscriptionLimit]);
 
-        $this->dependencies['companyService']
+        $this->dependencies[CompanyService::class]
             ->shouldReceive('find')
             ->with(['id' => $user->id])
             ->once()
             ->andReturn($companies);
 
-        $this->dependencies['employeeService']
-            ->shouldReceive('companyRemainingSubscription')
+        $this->dependencies[CompanyService::class]
+            ->shouldReceive('remainingSubscription')
             ->with($user->id)
             ->once()
             ->andReturn($remainingSubscription);
 
-        $this->dependencies['employeeService']
+        $this->dependencies[EmployeeService::class]
             ->shouldReceive('find')
             ->with(['company_id' => $user->id])
             ->once()
             ->andReturn($companies);
 
-        $this->dependencies['employeeService']
+        $this->dependencies[EmployeeService::class]
             ->shouldReceive('count')
             ->with(['company_id' => $user->id])
             ->once()
@@ -102,11 +102,11 @@ class CompanyControllerTest extends TestCase
         View::shouldReceive('make')
             ->with('company.index', $index, [])
             ->once()
-            ->andReturn($this->otherDependencies['response']);
+            ->andReturn($this->otherDependencies[Response::class]);
 
         $this->assertInstanceOf(
             Response::class,
-            $this->testedClass->index($this->otherDependencies['request'])
+            $this->testedClass->index($this->otherDependencies[Request::class])
         );
     }
 
@@ -118,7 +118,7 @@ class CompanyControllerTest extends TestCase
         View::shouldReceive('make')
             ->with('company.form', [], [])
             ->once()
-            ->andReturn($this->otherDependencies['response']);
+            ->andReturn($this->otherDependencies[Response::class]);
 
         $this->assertInstanceOf(
             Response::class,
@@ -132,13 +132,13 @@ class CompanyControllerTest extends TestCase
     public function testStore()
     {
         $user = factory(User::class)->make(['id' => 1]);
-        $this->otherDependencies['employeeFormRequest']
+        $this->otherDependencies[EmployeeFormRequest::class]
             ->shouldReceive('user')
             ->with()
             ->once()
             ->andReturn($user);
 
-        $this->otherDependencies['employeeFormRequest']
+        $this->otherDependencies[EmployeeFormRequest::class]
             ->shouldReceive('merge')
             ->with(['company_id' => $user->id])
             ->once();
@@ -147,20 +147,20 @@ class CompanyControllerTest extends TestCase
             ->make(['company_id' => $user->id])
             ->toArray();
 
-        $this->otherDependencies['employeeFormRequest']
+        $this->otherDependencies[EmployeeFormRequest::class]
             ->shouldReceive('all')
             ->with()
             ->once()
             ->andReturn($request);
 
-        $this->dependencies['employeeService']
+        $this->dependencies[EmployeeService::class]
             ->shouldReceive('create')
             ->with($request)
             ->once();
 
         $this->assertInstanceOf(
             RedirectResponse::class,
-            $this->testedClass->store($this->otherDependencies['employeeFormRequest'])
+            $this->testedClass->store($this->otherDependencies[EmployeeFormRequest::class])
         );
     }
 
@@ -183,7 +183,7 @@ class CompanyControllerTest extends TestCase
         $entityId = 1;
 
         $user = factory(User::class)->make(['id' => 1]);
-        $this->otherDependencies['request']
+        $this->otherDependencies[Request::class]
             ->shouldReceive('user')
             ->with()
             ->once()
@@ -195,7 +195,7 @@ class CompanyControllerTest extends TestCase
         ];
 
         $employee = factory(Employee::class, 1)->make();
-        $this->dependencies['employeeService']
+        $this->dependencies[EmployeeService::class]
             ->shouldReceive('find')
             ->with($params)
             ->once()
@@ -204,11 +204,11 @@ class CompanyControllerTest extends TestCase
         View::shouldReceive('make')
             ->with('company.form', $employee->first()->toArray(), [])
             ->once()
-            ->andReturn($this->otherDependencies['response']);
+            ->andReturn($this->otherDependencies[Response::class]);
 
         $this->assertInstanceOf(
             Response::class,
-            $this->testedClass->edit($this->otherDependencies['request'], $entityId)
+            $this->testedClass->edit($this->otherDependencies[Request::class], $entityId)
         );
     }
 
@@ -220,13 +220,13 @@ class CompanyControllerTest extends TestCase
         $entityId = 1;
 
         $user = factory(User::class)->make(['id' => 1]);
-        $this->otherDependencies['employeeFormRequest']
+        $this->otherDependencies[EmployeeFormRequest::class]
             ->shouldReceive('user')
             ->with()
             ->once()
             ->andReturn($user);
 
-        $this->otherDependencies['employeeFormRequest']
+        $this->otherDependencies[EmployeeFormRequest::class]
             ->shouldReceive('merge')
             ->with(['company_id' => $user->id])
             ->once();
@@ -235,20 +235,20 @@ class CompanyControllerTest extends TestCase
             ->make(['company_id' => $user->id])
             ->toArray();
 
-        $this->otherDependencies['employeeFormRequest']
+        $this->otherDependencies[EmployeeFormRequest::class]
             ->shouldReceive('all')
             ->with()
             ->once()
             ->andReturn($request);
 
-        $this->dependencies['employeeService']
+        $this->dependencies[EmployeeService::class]
             ->shouldReceive('update')
             ->with($entityId, $request)
             ->once();
 
         $this->assertInstanceOf(
             RedirectResponse::class,
-            $this->testedClass->update($this->otherDependencies['employeeFormRequest'], $entityId)
+            $this->testedClass->update($this->otherDependencies[EmployeeFormRequest::class], $entityId)
         );
     }
 
@@ -259,7 +259,7 @@ class CompanyControllerTest extends TestCase
     {
         $entityId = 1;
 
-        $this->dependencies['employeeService']
+        $this->dependencies[EmployeeService::class]
             ->shouldReceive('delete')
             ->with($entityId)
             ->once();

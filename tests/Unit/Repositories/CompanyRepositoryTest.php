@@ -17,7 +17,7 @@ class CompanyRepositoryTest extends TestCase
     public function setUp()
     {
         $this->dependencies = [
-            'company' => Mockery::mock(Company::class),
+            Company::class => Mockery::mock(Company::class),
         ];
 
         parent::setUp();
@@ -40,7 +40,7 @@ class CompanyRepositoryTest extends TestCase
     {
         $company = factory(Company::class, 1)->make();
 
-        $this->dependencies['company']
+        $this->dependencies[Company::class]
             ->shouldReceive('where->count')
             ->with(['id' => 1])
             ->with()
@@ -60,7 +60,7 @@ class CompanyRepositoryTest extends TestCase
     {
         $company = factory(Company::class, 1)->make();
 
-        $this->dependencies['company']
+        $this->dependencies[Company::class]
             ->shouldReceive('where->sum')
             ->with(['id' => 1])
             ->with('field')
@@ -80,7 +80,7 @@ class CompanyRepositoryTest extends TestCase
     {
         $company = factory(Company::class, 1)->make();
 
-        $this->dependencies['company']
+        $this->dependencies[Company::class]
             ->shouldReceive('where->get')
             ->with(['id' => 1])
             ->with()
@@ -100,7 +100,7 @@ class CompanyRepositoryTest extends TestCase
     {
         $company = factory(Company::class)->make();
 
-        $this->dependencies['company']
+        $this->dependencies[Company::class]
             ->shouldReceive('find')
             ->with(1)
             ->once()
@@ -119,7 +119,7 @@ class CompanyRepositoryTest extends TestCase
     {
         $company = factory(Company::class)->make();
 
-        $this->dependencies['company']
+        $this->dependencies[Company::class]
             ->shouldReceive('create')
             ->with($company->toArray())
             ->once()
@@ -138,7 +138,7 @@ class CompanyRepositoryTest extends TestCase
     {
         $company = factory(Company::class)->make();
 
-        $this->dependencies['company']
+        $this->dependencies[Company::class]
             ->shouldReceive('where->first->fill->save')
             ->with('id', 1)
             ->with()
@@ -158,12 +158,12 @@ class CompanyRepositoryTest extends TestCase
      */
     public function testDelete()
     {
-        $this->dependencies['company']
+        $this->dependencies[Company::class]
             ->shouldReceive('where->delete')
             ->with('id', 1)
             ->with()
             ->once()
-            ->andReturn($this->dependencies['company']);
+            ->andReturn($this->dependencies[Company::class]);
 
         $this->assertInstanceOf(
             Company::class,
