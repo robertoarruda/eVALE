@@ -14,7 +14,6 @@ class UsersTableSeeder extends Seeder
         $user = [
             'name' => 'Admin',
             'login' => 'admin',
-            'password' => bcrypt('123456'),
         ];
 
         $exists = DB::table('users')
@@ -24,6 +23,8 @@ class UsersTableSeeder extends Seeder
         if (!empty($exists)) {
             return false;
         }
+
+        $user['password'] = bcrypt('123456');
 
         DB::table('users')->insert($user);
     }
