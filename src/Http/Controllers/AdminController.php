@@ -74,22 +74,22 @@ class AdminController extends Controller
 
     /**
      * Show
-     * @param int $entityId Id da entidade
+     * @param int $companyId Id da empresa
      * @return \Illuminate\Routing\Redirector|\Illuminate\Http\RedirectResponse
      */
-    public function show(int $entityId)
+    public function show(int $companyId)
     {
-        return redirect()->route('admin.edit', $entityId);
+        return redirect()->route('admin.edit', $companyId);
     }
 
     /**
      * Edit
-     * @param int $entityId Id da entidade
+     * @param int $companyId Id da empresa
      * @return \Illuminate\Http\Response
      */
-    public function edit(Request $request, int $entityId)
+    public function edit(int $companyId)
     {
-        $data = $this->companyService->findById($entityId);
+        $data = $this->companyService->findById($companyId);
 
         return view('admin.form', $data->toArray());
     }
@@ -97,12 +97,12 @@ class AdminController extends Controller
     /**
      * Update
      * @param Request $request
-     * @param int $entityId Id da entidade
+     * @param int $companyId Id da empresa
      * @return \Illuminate\Routing\Redirector|\Illuminate\Http\RedirectResponse
      */
-    public function update(CompanyFormRequest $request, int $entityId)
+    public function update(CompanyFormRequest $request, int $companyId)
     {
-        $this->companyService->update($entityId, $request->all());
+        $this->companyService->update($companyId, $request->all());
 
         return redirect()->route('admin.index')
             ->with('success', 'Registro alterado com sucesso!');
@@ -110,14 +110,35 @@ class AdminController extends Controller
 
     /**
      * Destroy
-     * @param int $entityId Id da entidade
+     * @param int $companyId Id da empresa
      * @return \Illuminate\Routing\Redirector|\Illuminate\Http\RedirectResponse
      */
-    public function destroy(int $entityId)
+    public function destroy(int $companyId)
     {
-        $this->companyService->delete($entityId);
+        $this->companyService->delete($companyId);
 
         return redirect()->route('admin.index')
             ->with('success', 'Registro excluido com sucesso!');
+    }
+
+    /**
+     * Abastecimento
+     * @return \Illuminate\Routing\Redirector|\Illuminate\Http\RedirectResponse
+     */
+    public function fillUp()
+    {
+        $data = [
+            'companies' => $this->companyService->find(),
+        ];
+
+        return view('admin.fillup', $data);
+    }
+
+    /**
+     * Abastecimento
+     * @return \Illuminate\Routing\Redirector|\Illuminate\Http\RedirectResponse
+     */
+    public function postFillUp()
+    {
     }
 }

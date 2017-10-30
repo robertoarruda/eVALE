@@ -45,6 +45,9 @@
                         <li {{ (Request::is('*create') ? 'class="active"' : '') }}>
                             <a href="{{ route('admin.create') }}"><i class="fa fa-edit fa-fw"></i> Cadastro empresa</a>
                         </li>
+                        <li {{ (Request::is('*fillUp') ? 'class="active"' : '') }}>
+                            <a href="{{ route('admin.fillUp') }}"><i class="fa fa-edit fa-fw"></i> Abastecimento</a>
+                        </li>
                         <li {{ (Request::is('*charts') ? 'class="active"' : '') }}>
                             <a href="{{ url ('#') }}"><i class="fa fa-bar-chart-o fa-fw"></i> Transações</a>
                         </li>
