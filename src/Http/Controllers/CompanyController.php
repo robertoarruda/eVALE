@@ -77,23 +77,23 @@ class CompanyController extends Controller
 
     /**
      * Show
-     * @param int $entityId Id da entidade
+     * @param int $employeeId Id do funcionario
      * @return \Illuminate\Routing\Redirector|\Illuminate\Http\RedirectResponse
      */
-    public function show(int $entityId)
+    public function show(int $employeeId)
     {
-        return redirect()->route('company.edit', $entityId);
+        return redirect()->route('company.edit', $employeeId);
     }
 
     /**
      * Edit
-     * @param int $entityId Id da entidade
+     * @param int $employeeId Id do funcionario
      * @return \Illuminate\Http\Response
      */
-    public function edit(Request $request, int $entityId)
+    public function edit(Request $request, int $employeeId)
     {
         $params = [
-            'id' => $entityId,
+            'id' => $employeeId,
             'company_id' => $request->user()->id ?? 0,
         ];
 
@@ -105,14 +105,14 @@ class CompanyController extends Controller
     /**
      * Update
      * @param Request $request
-     * @param int $entityId Id da entidade
+     * @param int $employeeId Id do funcionario
      * @return \Illuminate\Routing\Redirector|\Illuminate\Http\RedirectResponse
      */
-    public function update(EmployeeFormRequest $request, int $entityId)
+    public function update(EmployeeFormRequest $request, int $employeeId)
     {
         $request->merge(['company_id' => $request->user()->id ?? 0]);
 
-        $this->employeeService->update($entityId, $request->all());
+        $this->employeeService->update($employeeId, $request->all());
 
         return redirect()->route('company.index')
             ->with('success', 'Registro alterado com sucesso!');
@@ -120,12 +120,12 @@ class CompanyController extends Controller
 
     /**
      * Destroy
-     * @param int $entityId Id da entidade
+     * @param int $employeeId Id do funcionario
      * @return \Illuminate\Routing\Redirector|\Illuminate\Http\RedirectResponse
      */
-    public function destroy(int $entityId)
+    public function destroy(int $employeeId)
     {
-        $this->employeeService->delete($entityId);
+        $this->employeeService->delete($employeeId);
 
         return redirect()->route('company.index')
             ->with('success', 'Registro excluido com sucesso!');
