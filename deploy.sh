@@ -2,11 +2,10 @@
 
 cd /var/www/html/eVALE
 
-git checkout -- .
-git checkout master
-git pull origin master
+git init && git remote set-url origin git@gitlab.com:robertoadearruda/eVALE.git && git fetch origin && git checkout -f master && git pull origin master
 
 chmod -R 777 storage && chmod -R 777 bootstrap/cache
+git checkout -- .
 
 composer install
 
