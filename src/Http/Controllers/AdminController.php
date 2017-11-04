@@ -5,8 +5,11 @@ namespace Nero\Evale\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Nero\Evale\Http\Requests\CompanyFormRequest;
+use Nero\Evale\Http\Requests\FillUpFormRequest;
 use Nero\Evale\Services\CompanyService;
 use Nero\Evale\Services\EmployeeService;
+use Nero\Evale\Services\FillUpService;
+use Nero\Evale\Services\FuelTypeService;
 
 class AdminController extends Controller
 {
@@ -21,15 +24,24 @@ class AdminController extends Controller
     protected $employeeService;
 
     /**
+     * @var \Nero\Evale\Services\FillUpService
+     */
+    protected $fillUpService;
+
+    /**
      * Metodo construtor da classe
      * @return void
      */
     public function __construct(
         CompanyService $companyService,
-        EmployeeService $employeeService
+        EmployeeService $employeeService,
+        FuelTypeService $fuelTypeService,
+        FillUpService $fillUpService
     ) {
         $this->companyService = $companyService;
         $this->employeeService = $employeeService;
+        $this->fuelTypeService = $fuelTypeService;
+        $this->fillUpService = $fillUpService;
     }
 
     /**
@@ -38,13 +50,13 @@ class AdminController extends Controller
      */
     public function index(Request $request)
     {
-        $subscriptionsTotal = $this->companyService->sum('subscription_limit') ?: 0;
+        $companies = $this->companyService->find();
 
         $index = [
-            'list' => $this->companyService->find(),
-            'companiesCount' => $this->companyService->count() ?: 0,
-            'employeesCount' => $this->employeeService->count() ?: 0,
-            'subscriptionsTotal' => number_format($subscriptionsTotal, 2, ',', '.'),
+            'companies' => $companies,
+            'companiesCount' => $companies->count() ?: 0,
+            'totalConsumption' => $this->fillUpService->filter()->sum('value'),
+            'subscriptionsTotal' => $companies->sum('subscription_limit') ?: 0,
         ];
 
         return view('admin.index', $index);
@@ -56,7 +68,7 @@ class AdminController extends Controller
      */
     public function create()
     {
-        return view('admin.form');
+        return view('admin.company');
     }
 
     /**
@@ -91,7 +103,7 @@ class AdminController extends Controller
     {
         $data = $this->companyService->findById($companyId);
 
-        return view('admin.form', $data->toArray());
+        return view('admin.company', $data->toArray());
     }
 
     /**
@@ -128,6 +140,7 @@ class AdminController extends Controller
     public function fillUp()
     {
         $data = [
+            'fuel_types' => $this->fuelTypeService->find(),
             'companies' => $this->companyService->find(),
         ];
 
@@ -138,7 +151,37 @@ class AdminController extends Controller
      * Abastecimento
      * @return \Illuminate\Routing\Redirector|\Illuminate\Http\RedirectResponse
      */
-    public function postFillUp()
+    public function postFillUp(FillUpFormRequest $request)
     {
+        $this->fillUpService->post($request->all());
+
+        return redirect()->route('admin.index')
+            ->with('success', 'Abastecimento lançado com sucesso!');
+    }
+
+    /**
+     * Relatorios
+     * @return \Illuminate\Http\Response
+     */
+    public function reports(Request $request)
+    {
+        $companyId = $request->query('filter_company') ?: 0;
+        $initial = $request->query('filter_initial') ?: '';
+        $final = $request->query('filter_final') ?: '';
+
+        $fillUps = $this->fillUpService->filter($companyId, 0, $initial, $final);
+
+        $index = [
+            'fillUps' => $fillUps,
+            'fillUpsCount' => $fillUps->count() ?: 0,
+            'totalConsumption' => $fillUps->sum('value') ?? 0,
+            'filter' => [
+                'companies' => $this->companyService->find(),
+                'initial' => $this->fillUpService->startOfMonth(),
+                'final' => $this->fillUpService->endOfMonth(),
+            ],
+        ];
+
+        return view('admin.reports', $index);
     }
 }

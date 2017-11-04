@@ -2,21 +2,59 @@
 
 namespace Nero\Evale\Services;
 
-use Nero\Evale\Repositories\CompanyRepository;
-use Nero\Evale\Repositories\EmployeeRepository;
+use Carbon\Carbon;
+use Nero\Evale\Repositories\FillUpRepository;
+use Nero\Evale\Services\EmployeeService;
+use Nero\Evale\Services\Service;
+use Nero\Evale\Traits\DateTrait;
 
-class FillUpService
+class FillUpService extends Service
 {
+    use DateTrait;
+
     /**
      * Metodo construtor da classe
      * @return void
      */
     public function __construct(
-        CompanyRepository $companyRepository,
-        EmployeeRepository $employeeRepository
+        FillUpRepository $repository,
+        EmployeeService $employeeService,
+        Carbon $carbon
     ) {
-        $this->companyRepository = $companyRepository;
-        $this->employeeRepository = $employeeRepository;
+        $this->repository = $repository;
+        $this->employeeService = $employeeService;
+        $this->carbon = $carbon;
+    }
+
+    /**
+     * Retorna os abastecimentos pelo filtro
+     *
+     * @param int $companyId Id da empresa
+     * @param int $employeeId Id do funcionario
+     * @param string $initialDate Data inicial da consulta
+     * @param string $finalDate Data final da consulta
+     * @return \Collection
+     */
+    public function filter(
+        int $companyId = 0,
+        int $employeeId = 0,
+        string $initialDate = '',
+        string $finalDate = ''
+    ) {
+        $conditions = [
+            ['created_at', '>=', $this->dateOrStartOfMonth($initialDate)],
+            ['created_at', '<=', $this->dateOrEndOfMonth($finalDate)],
+        ];
+
+        if ($companyId) {
+            $conditions['company_id'] = $companyId;
+        }
+
+        if ($employeeId) {
+            $conditions['employee_id'] = $employeeId;
+        }
+
+        return $this->find($conditions);
     }
 
     /**
@@ -25,9 +63,19 @@ class FillUpService
      * @param int $companyId Id da empresa
      * @param string $employeeRegistrationNumber Matricula do funcionario
      * @param float $value Valor abastecido
-     * @return array
+     * @return Nero\Evale\Models\FillUp
      */
-    public function post(string $employeeRegistrationNumber, float $value)
+    public function post(array $fillUp)
     {
+        $fillUp['employee_id'] = $this->employeeService
+            ->find([
+                'company_id' => $fillUp['company_id'],
+                'registration_number' => $fillUp['employee_registration_number'],
+            ])
+            ->first()
+            ->id ?? 0;
+
+        return $this->create($fillUp);
     }
+
 }

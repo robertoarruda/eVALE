@@ -30,6 +30,7 @@ Route::prefix('admin')
         $controller = '\Nero\Evale\Http\Controllers\AdminController';
         Route::get('fillup', "{$controller}@fillUp")->name('admin.fillUp');
         Route::post('fillup', "{$controller}@postFillUp")->name('admin.postFillUp');
+        Route::get('reports', "{$controller}@reports")->name('admin.reports');
     });
 
 Route::resource(
@@ -46,6 +47,13 @@ Route::prefix('company')
             ->name('company.login');
         Route::post('logout', "{$controller}@logout")
             ->name('company.logout');
+    });
+
+Route::prefix('company')
+    ->middleware('auth:company')
+    ->group(function () {
+        $controller = '\Nero\Evale\Http\Controllers\CompanyController';
+        Route::get('reports', "{$controller}@reports")->name('company.reports');
     });
 
 Route::resource(

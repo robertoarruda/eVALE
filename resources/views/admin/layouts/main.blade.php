@@ -48,8 +48,8 @@
                         <li {{ (Request::is('*fillUp') ? 'class="active"' : '') }}>
                             <a href="{{ route('admin.fillUp') }}"><i class="fa fa-edit fa-fw"></i> Abastecimento</a>
                         </li>
-                        <li {{ (Request::is('*charts') ? 'class="active"' : '') }}>
-                            <a href="{{ url ('#') }}"><i class="fa fa-bar-chart-o fa-fw"></i> Transações</a>
+                        <li {{ (Request::is('*reports') ? 'class="active"' : '') }}>
+                            <a href="{{ route('admin.reports') }}"><i class="fa fa-bar-chart-o fa-fw"></i> Transações</a>
                         </li>
                     </ul>
                 </div>
@@ -67,6 +67,12 @@
                 <!-- /.col-lg-12 -->
             </div>
 
+            @if (session('info'))
+                <div class="alert alert-info">
+                    {{ session('info') }}
+                </div>
+            @endif
+
             @if (session('success'))
                 <div class="alert alert-success">
                     {{ session('success') }}
@@ -76,6 +82,16 @@
             @if (session('error'))
                 <div class="alert alert-danger">
                     {{ session('error') }}
+                </div>
+            @endif
+
+            @if ($errors->any())
+                <div class="alert alert-danger">
+                    <ul>
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
                 </div>
             @endif
 

@@ -19,13 +19,16 @@ class CompanyService extends Service
      * Retorna o valor restante da assinatura da empresa
      *
      * @param int $companyId Id da empresa
+     * @param array $ignoredEmployees Id de funcionarios ignorados na conta
      * @return float
      */
-    public function remainingSubscription(int $companyId)
+    public function remainingSubscription(int $companyId, array $ignoredEmployees = [])
     {
         $company = $this->findById($companyId);
 
-        $totalConsumptionLimit = $company->employees->sum('consumption_limit') ?? 0;
+        $totalConsumptionLimit = $company->employees
+            ->whereNotIn('id', $ignoredEmployees)
+            ->sum('consumption_limit') ?? 0;
 
         return ($company->subscription_limit ?? 0) - $totalConsumptionLimit;
     }
