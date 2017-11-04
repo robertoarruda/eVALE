@@ -11,6 +11,8 @@ use Nero\Evale\Http\Requests\CompanyFormRequest;
 use Nero\Evale\Models\Company;
 use Nero\Evale\Services\CompanyService;
 use Nero\Evale\Services\EmployeeService;
+use Nero\Evale\Services\FillUpService;
+use Nero\Evale\Services\FuelTypeService;
 use Tests\TestCase;
 use View;
 
@@ -32,6 +34,8 @@ class AdminControllerTest extends TestCase
         $this->dependencies = [
             CompanyService::class => Mockery::mock(CompanyService::class),
             EmployeeService::class => Mockery::mock(EmployeeService::class),
+            FuelTypeService::class => Mockery::mock(FuelTypeService::class),
+            FillUpService::class => Mockery::mock(FillUpService::class),
         ];
 
         parent::setUp();
@@ -53,9 +57,12 @@ class AdminControllerTest extends TestCase
     public function testIndex()
     {
         $companiesCount = 10;
-        $employeesCount = 100;
         $subscriptionLimit = 1000;
         $subscriptionsTotal = $subscriptionLimit * $companiesCount;
+
+        $fillUpCount = 5;
+        $consumption = 100;
+        $totalConsumption = $consumption * $fillUpCount;
 
         $companies = factory(Company::class, $companiesCount)
             ->make(['subscription_limit' => $subscriptionLimit]);
@@ -66,29 +73,20 @@ class AdminControllerTest extends TestCase
             ->once()
             ->andReturn($companies);
 
-        $this->dependencies[CompanyService::class]
-            ->shouldReceive('sum')
-            ->with('subscription_limit')
-            ->once()
-            ->andReturn($subscriptionsTotal);
+        $fillUp = factory(Company::class, $fillUpCount)
+            ->make(['value' => $consumption]);
 
-        $this->dependencies[CompanyService::class]
-            ->shouldReceive('count')
+        $this->dependencies[FillUpService::class]
+            ->shouldReceive('filter')
             ->with()
             ->once()
-            ->andReturn($companiesCount);
-
-        $this->dependencies[EmployeeService::class]
-            ->shouldReceive('count')
-            ->with()
-            ->once()
-            ->andReturn($employeesCount);
+            ->andReturn($fillUp);
 
         $index = [
-            'list' => $companies,
+            'companies' => $companies,
             'companiesCount' => $companiesCount,
-            'employeesCount' => $employeesCount,
-            'subscriptionsTotal' => number_format($subscriptionsTotal, 2, ',', '.'),
+            'totalConsumption' => $totalConsumption,
+            'subscriptionsTotal' => $subscriptionsTotal,
         ];
 
         View::shouldReceive('make')
@@ -108,7 +106,7 @@ class AdminControllerTest extends TestCase
     public function testCreate()
     {
         View::shouldReceive('make')
-            ->with('admin.form', [], [])
+            ->with('admin.company', [], [])
             ->once()
             ->andReturn($this->otherDependencies[Response::class]);
 
@@ -160,23 +158,23 @@ class AdminControllerTest extends TestCase
      */
     public function testEdit()
     {
-        $entityId = 1;
+        $companyId = 1;
 
         $company = factory(Company::class)->make();
         $this->dependencies[CompanyService::class]
             ->shouldReceive('findById')
-            ->with($entityId)
+            ->with($companyId)
             ->once()
             ->andReturn($company);
 
         View::shouldReceive('make')
-            ->with('admin.form', $company->toArray(), [])
+            ->with('admin.company', $company->toArray(), [])
             ->once()
             ->andReturn($this->otherDependencies[Response::class]);
 
         $this->assertInstanceOf(
             Response::class,
-            $this->testedClass->edit($this->otherDependencies[Request::class], $entityId)
+            $this->testedClass->edit($companyId)
         );
     }
 
@@ -185,7 +183,7 @@ class AdminControllerTest extends TestCase
      */
     public function testUpdate()
     {
-        $entityId = 1;
+        $companyId = 1;
 
         $this->otherDependencies[CompanyFormRequest::class]
             ->shouldReceive('merge')
@@ -204,12 +202,12 @@ class AdminControllerTest extends TestCase
 
         $this->dependencies[CompanyService::class]
             ->shouldReceive('update')
-            ->with($entityId, $request)
+            ->with($companyId, $request)
             ->once();
 
         $this->assertInstanceOf(
             RedirectResponse::class,
-            $this->testedClass->update($this->otherDependencies[CompanyFormRequest::class], $entityId)
+            $this->testedClass->update($this->otherDependencies[CompanyFormRequest::class], $companyId)
         );
     }
 
@@ -218,16 +216,16 @@ class AdminControllerTest extends TestCase
      */
     public function testDestroy()
     {
-        $entityId = 1;
+        $companyId = 1;
 
         $this->dependencies[CompanyService::class]
             ->shouldReceive('delete')
-            ->with($entityId)
+            ->with($companyId)
             ->once();
 
         $this->assertInstanceOf(
             RedirectResponse::class,
-            $this->testedClass->destroy($entityId)
+            $this->testedClass->destroy($companyId)
         );
     }
 }

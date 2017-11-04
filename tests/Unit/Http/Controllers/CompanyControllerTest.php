@@ -10,9 +10,11 @@ use Nero\Evale\Http\Controllers\CompanyController;
 use Nero\Evale\Http\Requests\EmployeeFormRequest;
 use Nero\Evale\Models\Company;
 use Nero\Evale\Models\Employee;
+use Nero\Evale\Models\FillUp;
 use Nero\Evale\Models\User;
 use Nero\Evale\Services\CompanyService;
 use Nero\Evale\Services\EmployeeService;
+use Nero\Evale\Services\FillUpService;
 use Tests\TestCase;
 use View;
 
@@ -34,6 +36,7 @@ class CompanyControllerTest extends TestCase
         $this->dependencies = [
             CompanyService::class => Mockery::mock(CompanyService::class),
             EmployeeService::class => Mockery::mock(EmployeeService::class),
+            FillUpService::class => Mockery::mock(FillUpService::class),
         ];
 
         parent::setUp();
@@ -55,9 +58,11 @@ class CompanyControllerTest extends TestCase
     public function testIndex()
     {
         $employeesCount = 10;
-        $subscriptionLimit = 1000.99;
-        $totalConsumptionLimit = 559.80;
-        $remainingSubscription = $subscriptionLimit - $totalConsumptionLimit;
+        $remainingSubscription = 10000;
+
+        $fillUpCount = 5;
+        $consumption = 100;
+        $totalConsumption = $consumption * $fillUpCount;
 
         $user = factory(User::class)->make(['id' => 1]);
         $this->otherDependencies[Request::class]
@@ -66,14 +71,21 @@ class CompanyControllerTest extends TestCase
             ->once()
             ->andReturn($user);
 
-        $companies = factory(Company::class, $employeesCount)
-            ->make(['subscription_limit' => $subscriptionLimit]);
-
-        $this->dependencies[CompanyService::class]
-            ->shouldReceive('find')
-            ->with(['id' => $user->id])
+        $employees = factory(Employee::class, $employeesCount)->make();
+        $this->dependencies[EmployeeService::class]
+            ->shouldReceive('findByCompanyId')
+            ->with($user->id, 'complete')
             ->once()
-            ->andReturn($companies);
+            ->andReturn($employees);
+
+        $fillUp = factory(FillUp::class, $fillUpCount)
+            ->make(['value' => $consumption]);
+
+        $this->dependencies[FillUpService::class]
+            ->shouldReceive('filter')
+            ->with($user->id)
+            ->once()
+            ->andReturn($fillUp);
 
         $this->dependencies[CompanyService::class]
             ->shouldReceive('remainingSubscription')
@@ -81,22 +93,11 @@ class CompanyControllerTest extends TestCase
             ->once()
             ->andReturn($remainingSubscription);
 
-        $this->dependencies[EmployeeService::class]
-            ->shouldReceive('find')
-            ->with(['company_id' => $user->id])
-            ->once()
-            ->andReturn($companies);
-
-        $this->dependencies[EmployeeService::class]
-            ->shouldReceive('count')
-            ->with(['company_id' => $user->id])
-            ->once()
-            ->andReturn($employeesCount);
-
         $index = [
-            'list' => $companies,
+            'employees' => $employees,
             'employeesCount' => $employeesCount,
-            'remainingSubscription' => number_format($remainingSubscription, 2, ',', '.'),
+            'totalConsumption' => $totalConsumption,
+            'remainingSubscription' => $remainingSubscription,
         ];
 
         View::shouldReceive('make')
@@ -116,7 +117,7 @@ class CompanyControllerTest extends TestCase
     public function testCreate()
     {
         View::shouldReceive('make')
-            ->with('company.form', [], [])
+            ->with('company.employee', [], [])
             ->once()
             ->andReturn($this->otherDependencies[Response::class]);
 
@@ -180,7 +181,7 @@ class CompanyControllerTest extends TestCase
      */
     public function testEdit()
     {
-        $entityId = 1;
+        $employeeId = 1;
 
         $user = factory(User::class)->make(['id' => 1]);
         $this->otherDependencies[Request::class]
@@ -190,7 +191,7 @@ class CompanyControllerTest extends TestCase
             ->andReturn($user);
 
         $params = [
-            'id' => $entityId,
+            'id' => $employeeId,
             'company_id' => $user->id,
         ];
 
@@ -202,13 +203,13 @@ class CompanyControllerTest extends TestCase
             ->andReturn($employee);
 
         View::shouldReceive('make')
-            ->with('company.form', $employee->first()->toArray(), [])
+            ->with('company.employee', $employee->first()->toArray(), [])
             ->once()
             ->andReturn($this->otherDependencies[Response::class]);
 
         $this->assertInstanceOf(
             Response::class,
-            $this->testedClass->edit($this->otherDependencies[Request::class], $entityId)
+            $this->testedClass->edit($this->otherDependencies[Request::class], $employeeId)
         );
     }
 
@@ -217,7 +218,7 @@ class CompanyControllerTest extends TestCase
      */
     public function testUpdate()
     {
-        $entityId = 1;
+        $employeeId = 1;
 
         $user = factory(User::class)->make(['id' => 1]);
         $this->otherDependencies[EmployeeFormRequest::class]
@@ -243,12 +244,12 @@ class CompanyControllerTest extends TestCase
 
         $this->dependencies[EmployeeService::class]
             ->shouldReceive('update')
-            ->with($entityId, $request)
+            ->with($employeeId, $request)
             ->once();
 
         $this->assertInstanceOf(
             RedirectResponse::class,
-            $this->testedClass->update($this->otherDependencies[EmployeeFormRequest::class], $entityId)
+            $this->testedClass->update($this->otherDependencies[EmployeeFormRequest::class], $employeeId)
         );
     }
 
@@ -257,16 +258,16 @@ class CompanyControllerTest extends TestCase
      */
     public function testDestroy()
     {
-        $entityId = 1;
+        $employeeId = 1;
 
         $this->dependencies[EmployeeService::class]
             ->shouldReceive('delete')
-            ->with($entityId)
+            ->with($employeeId)
             ->once();
 
         $this->assertInstanceOf(
             RedirectResponse::class,
-            $this->testedClass->destroy($entityId)
+            $this->testedClass->destroy($employeeId)
         );
     }
 }

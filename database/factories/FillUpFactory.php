@@ -11,10 +11,12 @@ $factory->define(Nero\Evale\Models\FillUp::class, function (Faker $faker) {
     ];
 });
 
-$factory->define(Nero\Evale\Models\FillUp::class, 'create', function (Faker $faker) {
+$factory->defineAs(Nero\Evale\Models\FillUp::class, 'create', function (Faker $faker) {
+    $employee = factory(Nero\Evale\Models\Employee::class, 'create')->create();
+
     return [
-        'company_id' => factory(Nero\Evale\Models\Company::class)->create()->id,
-        'employee_id' => factory(Nero\Evale\Models\Employee::class)->create()->id,
+        'company_id' => $employee->company->id,
+        'employee_id' => $employee->id,
         'fuel_type_id' => factory(Nero\Evale\Models\FuelType::class)->create()->id,
         'value' => $faker->randomFloat(2, 0, 100000),
     ];

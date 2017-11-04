@@ -2,6 +2,7 @@
 
 namespace Tests\Nero\Evale\Validator;
 
+use Illuminate\Validation\Validator;
 use Mockery;
 use Nero\Evale\Models\Employee;
 use Nero\Evale\Services\CompanyService;
@@ -18,6 +19,10 @@ class EmployeeValidatorTest extends TestCase
 
     public function setUp()
     {
+        $this->otherDependencies = [
+            Validator::class => Mockery::mock(Validator::class),
+        ];
+
         $this->dependencies = [
             CompanyService::class => Mockery::mock(CompanyService::class),
             EmployeeService::class => Mockery::mock(EmployeeService::class),
@@ -44,24 +49,21 @@ class EmployeeValidatorTest extends TestCase
         $attribute = '';
         $value = 50;
         $parameters = array_values(['companyId' => 10, 'employeeId' => 100]);
-        $validator = '';
 
         $this->dependencies[CompanyService::class]
             ->shouldReceive('remainingSubscription')
-            ->with($parameters[0])
+            ->with($parameters[0], [$parameters[1]])
             ->once()
             ->andReturn(50);
 
-        $employee = factory(Employee::class)->make(['consumption_limit' => 10]);
-        $this->dependencies[EmployeeService::class]
-            ->shouldReceive('findById')
-            ->with($parameters[1])
-            ->once()
-            ->andReturn($employee);
-
         $this->assertTrue(
             $this->testedClass
-                ->validateSubscriptionLimit($attribute, $value, $parameters, $validator)
+                ->validateSubscriptionLimit(
+                    $attribute,
+                    $value,
+                    $parameters,
+                    $this->otherDependencies[Validator::class]
+                )
         );
     }
 
@@ -71,26 +73,23 @@ class EmployeeValidatorTest extends TestCase
     public function testValidateSubscriptionLimit2()
     {
         $attribute = '';
-        $value = 60;
+        $value = 40;
         $parameters = array_values(['companyId' => 10, 'employeeId' => 100]);
-        $validator = '';
 
         $this->dependencies[CompanyService::class]
             ->shouldReceive('remainingSubscription')
-            ->with($parameters[0])
+            ->with($parameters[0], [$parameters[1]])
             ->once()
             ->andReturn(50);
 
-        $employee = factory(Employee::class)->make(['consumption_limit' => 10]);
-        $this->dependencies[EmployeeService::class]
-            ->shouldReceive('findById')
-            ->with($parameters[1])
-            ->once()
-            ->andReturn($employee);
-
         $this->assertTrue(
             $this->testedClass
-                ->validateSubscriptionLimit($attribute, $value, $parameters, $validator)
+                ->validateSubscriptionLimit(
+                    $attribute,
+                    $value,
+                    $parameters,
+                    $this->otherDependencies[Validator::class]
+                )
         );
     }
 
@@ -102,24 +101,21 @@ class EmployeeValidatorTest extends TestCase
         $attribute = '';
         $value = 70;
         $parameters = array_values(['companyId' => 10, 'employeeId' => 100]);
-        $validator = '';
 
         $this->dependencies[CompanyService::class]
             ->shouldReceive('remainingSubscription')
-            ->with($parameters[0])
+            ->with($parameters[0], [$parameters[1]])
             ->once()
             ->andReturn(50);
 
-        $employee = factory(Employee::class)->make(['consumption_limit' => 10]);
-        $this->dependencies[EmployeeService::class]
-            ->shouldReceive('findById')
-            ->with($parameters[1])
-            ->once()
-            ->andReturn($employee);
-
         $this->assertFalse(
             $this->testedClass
-                ->validateSubscriptionLimit($attribute, $value, $parameters, $validator)
+                ->validateSubscriptionLimit(
+                    $attribute,
+                    $value,
+                    $parameters,
+                    $this->otherDependencies[Validator::class]
+                )
         );
     }
 }
