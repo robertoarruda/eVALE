@@ -20,6 +20,16 @@ class AppServiceProvider extends ServiceProvider
             'subscription_limit',
             'Nero\Evale\Validator\EmployeeValidator@validateSubscriptionLimit'
         );
+
+        Validator::extend(
+            'employee_login',
+            'Nero\Evale\Validator\FillUpValidator@validateEmployeeLogin'
+        );
+
+        Validator::extend(
+            'consumption_limit',
+            'Nero\Evale\Validator\FillUpValidator@validateConsumptionLimit'
+        );
     }
 
     /**

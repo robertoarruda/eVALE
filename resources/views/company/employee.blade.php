@@ -7,17 +7,6 @@
     <div class="col-sm-12">
         <div class="row">
             <div class="col-lg-12 margin-bottom-20">
-
-                @if ($errors->any())
-                    <div class="alert alert-danger">
-                        <ul>
-                            @foreach ($errors->all() as $error)
-                                <li>{{ $error }}</li>
-                            @endforeach
-                        </ul>
-                    </div>
-                @endif
-
                 @isset($id)
                 <form role="form" action="{{ route('company.update', $id) }}" method="post">
                 @else
@@ -39,14 +28,14 @@
                         <input id="cpf" name="cpf" value="{{ $cpf ?? old('cpf') }}" class="form-control" maxlength="11" required>
                     </div>
                     <div class="form-group">
-                        <label for="consumption_limit">Limite de consumo</label>
+                        <label for="consumption_limit">Limite mensal</label>
                         <div class="input-group">
                             <span class="input-group-addon">R$</span>
                             <input type="number" id="consumption_limit" name="consumption_limit" value="{{ $consumption_limit ?? old('consumption_limit') }}" class="form-control" step="0.01" min="1" max="100000" maxlength="6" required>
                         </div>
                     </div>
                     <div class="form-group">
-                        <label for="registration_number">Matrícula ID</label>
+                        <label for="registration_number">Número de matrícula</label>
                         <input id="registration_number" name="registration_number" value="{{ $registration_number ?? old('registration_number') }}" class="form-control" maxlength="14" required>
                     </div>
                     <div class="form-group">

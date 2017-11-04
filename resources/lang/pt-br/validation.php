@@ -12,6 +12,4 @@ return [
     | as the size rules. Feel free to tweak each of these messages here.
     |
      */
-
-    'subscription_limit' => 'Limite de consumo informado supera o limite da assinatura.',
 ];

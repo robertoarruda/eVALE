@@ -69,6 +69,16 @@ class Company extends Authenticatable
     }
 
     /**
+     * Cria relacionamento com a model FillUp
+     *
+     * @return mixed
+     */
+    public function fillUps()
+    {
+        return $this->hasMany(FillUp::class, 'company_id');
+    }
+
+    /**
      * Manipula campo antes de atribuir
      * @param string $password
      * @return string

@@ -4,18 +4,16 @@ namespace Nero\Evale\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Employee extends Model
+class FillUp extends Model
 {
     /**
      * @var array Campos atribuiveis
      */
     protected $fillable = [
         'company_id',
-        'name',
-        'cpf',
-        'registration_number',
-        'consumption_limit',
-        'password',
+        'employee_id',
+        'fuel_type_id',
+        'value',
     ];
 
     /**
@@ -24,10 +22,9 @@ class Employee extends Model
     protected $visible = [
         'id',
         'company_id',
-        'name',
-        'cpf',
-        'registration_number',
-        'consumption_limit',
+        'employee_id',
+        'fuel_type_id',
+        'value',
     ];
 
     /**
@@ -36,11 +33,9 @@ class Employee extends Model
     protected $casts = [
         'id' => 'integer',
         'company_id' => 'integer',
-        'name' => 'string',
-        'cpf' => 'string',
-        'registration_number' => 'string',
-        'consumption_limit' => 'double',
-        'password' => 'string',
+        'employee_id' => 'integer',
+        'fuel_type_id' => 'integer',
+        'value' => 'double',
     ];
 
     /**
@@ -54,22 +49,22 @@ class Employee extends Model
     }
 
     /**
-     * Cria relacionamento com a model FillUp
+     * Cria relacionamento com a model Employee
      *
      * @return mixed
      */
-    public function fillUps()
+    public function employee()
     {
-        return $this->hasMany(FillUp::class, 'employee_id');
+        return $this->belongsTo(Employee::class, 'employee_id');
     }
 
     /**
-     * Manipula campo antes de atribuir
-     * @param string $password
-     * @return string
+     * Cria relacionamento com a model FuelType
+     *
+     * @return mixed
      */
-    public function setPasswordAttribute($password)
+    public function fuelType()
     {
-        return $this->attributes['password'] = bcrypt($password);
+        return $this->belongsTo(FuelType::class, 'fuel_type_id');
     }
 }

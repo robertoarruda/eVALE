@@ -2,6 +2,7 @@
 
 namespace Nero\Evale\Validator;
 
+use Illuminate\Validation\Validator;
 use Nero\Evale\Services\CompanyService;
 use Nero\Evale\Services\EmployeeService;
 
@@ -29,20 +30,25 @@ class EmployeeValidator
         $this->employeeService = $employeeService;
     }
 
-    public function validateSubscriptionLimit($attribute, $value, $parameters, $validator)
-    {
+    /**
+     * Valida o limite de assinatura
+     *
+     * @param string $attribute Nome do campo
+     * @param float $value Valor do campo
+     * @param string $parameters
+     * @param Validator $validator
+     * @return boolean
+     */
+    public function validateSubscriptionLimit(
+        string $attribute,
+        float $value,
+        array $parameters,
+        Validator $validator
+    ) {
         $remainingSubscription = $this->companyService
-            ->remainingSubscription($parameters[0]) ?? 0;
+            ->remainingSubscription($parameters[0], [$parameters[1]]) ?? 0;
 
-        $currentConsumptionLimit = $this->employeeService
-            ->findById($parameters[1])
-            ->consumption_limit ?? 0;
-
-        if ($remainingSubscription + $currentConsumptionLimit - $value < 0) {
-            return false;
-        }
-
-        return true;
+        return ($remainingSubscription - $value >= 0);
     }
 
 }
