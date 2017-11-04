@@ -14,7 +14,7 @@
                         <select id="fuel_type_id" name="fuel_type_id" class="form-control" required>
                             <option hidden selected value>Selecione...</option>
                             @foreach ($fuel_types ?? [] as $fuel_type)
-                            <option value="{{ $fuel_type->id }}">{{ $fuel_type->name }}</option>
+                                <option value="{{ $fuel_type->id }}">{{ $fuel_type->name }}</option>
                             @endforeach
                         </select>
                     </div>
@@ -30,7 +30,7 @@
                         <select id="company_id" name="company_id" class="form-control" required>
                             <option hidden selected value>Selecione...</option>
                             @foreach ($companies ?? [] as $company)
-                            <option value="{{ $company->id }}">{{ $company->name }}</option>
+                                <option value="{{ $company->id }}">{{ $company->name }}</option>
                             @endforeach
                         </select>
                     </div>

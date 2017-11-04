@@ -7,8 +7,8 @@
                     <select id="filterCompany" name="filter_company" class="form-control">
                         <option selected value>Todas</option>
                         @foreach ($filter['companies'] ?? [] as $company)
-                        @php ($selected = request()->query('filter_company') == $company->id ? 'selected' : '')
-                        <option {{ $selected }} value="{{ $company->id }}">{{ $company->name }}</option>
+                            @php ($selected = request()->query('filter_company') == $company->id ? 'selected' : '')
+                            <option {{ $selected }} value="{{ $company->id }}">{{ $company->name }}</option>
                         @endforeach
                     </select>
                 </div>
