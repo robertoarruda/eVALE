@@ -21,14 +21,16 @@ class EmployeeFormRequest extends FormRequest
     /**
      * Get the validation rules that apply to the request.
      *
+     * @param Request $request
+     * @param Rule $rule
      * @return array
      */
-    public function rules(Request $request)
+    public function rules(Request $request, Rule $rule)
     {
         $employeeId = $request->employeeId ?? 0;
         $companyId = $request->user()->id ?? 0;
 
-        $registrationNumberUnique = Rule::unique('employees')
+        $registrationNumberUnique = $rule->unique('employees')
             ->ignore($employeeId)
             ->where(function ($query) use ($companyId) {
                 return $query->where('company_id', $companyId);

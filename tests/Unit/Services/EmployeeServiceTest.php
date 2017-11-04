@@ -2,6 +2,7 @@
 
 namespace Tests\Nero\Evale\Services;
 
+use Carbon\Carbon;
 use Mockery;
 use Nero\Evale\Models\Employee;
 use Nero\Evale\Repositories\EmployeeRepository;
@@ -19,6 +20,7 @@ class EmployeeServiceTest extends TestCase
     {
         $this->dependencies = [
             EmployeeRepository::class => Mockery::mock(EmployeeRepository::class),
+            Carbon::class => Mockery::mock(Carbon::class),
         ];
 
         parent::setUp();
