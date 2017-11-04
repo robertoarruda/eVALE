@@ -155,7 +155,7 @@ class AdminController extends Controller
     {
         $this->fillUpService->post($request->all());
 
-        return redirect()->route('admin.index')
+        return redirect()->route('admin.reports')
             ->with('success', 'Abastecimento lançado com sucesso!');
     }
 
@@ -172,7 +172,7 @@ class AdminController extends Controller
         $fillUps = $this->fillUpService->filter($companyId, 0, $initial, $final);
 
         $index = [
-            'fillUps' => $fillUps,
+            'fillUps' => $fillUps->sortByDesc('created_at'),
             'fillUpsCount' => $fillUps->count() ?: 0,
             'totalConsumption' => $fillUps->sum('value') ?? 0,
             'filter' => [

@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Nero\Evale\Services;
+namespace Tests\Nero\Evale\Validator;
 
 use Mockery;
 use Nero\Evale\Models\Employee;
