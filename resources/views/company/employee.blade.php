@@ -8,15 +8,15 @@
         <div class="row">
             <div class="col-lg-12 margin-bottom-20">
                 @isset($id)
-                <form role="form" action="{{ route('company.update', $id) }}" method="post">
+                    <form role="form" action="{{ route('company.update', $id) }}" method="post">
                 @else
-                <form role="form" action="{{ route('company.store') }}" method="post">
+                    <form role="form" action="{{ route('company.store') }}" method="post">
                 @endisset
 
                     {{ csrf_field() }}
 
                     @isset($id)
-                    {{ method_field('put') }}
+                        {{ method_field('put') }}
                     @endisset
 
                     <div class="form-group">
