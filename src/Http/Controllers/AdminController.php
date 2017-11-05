@@ -52,14 +52,14 @@ class AdminController extends Controller
     {
         $companies = $this->companyService->find();
 
-        $index = [
+        $data = [
             'companies' => $companies,
             'companiesCount' => $companies->count() ?: 0,
             'totalConsumption' => $this->fillUpService->filter()->sum('value'),
             'subscriptionsTotal' => $companies->sum('subscription_limit') ?: 0,
         ];
 
-        return view('admin.index', $index);
+        return view('admin.index', $data);
     }
 
     /**
@@ -171,7 +171,7 @@ class AdminController extends Controller
 
         $fillUps = $this->fillUpService->filter($companyId, 0, $initial, $final);
 
-        $index = [
+        $data = [
             'fillUps' => $fillUps->sortByDesc('created_at'),
             'fillUpsCount' => $fillUps->count() ?: 0,
             'totalConsumption' => $fillUps->sum('value') ?? 0,
@@ -182,6 +182,6 @@ class AdminController extends Controller
             ],
         ];
 
-        return view('admin.reports', $index);
+        return view('admin.reports', $data);
     }
 }
