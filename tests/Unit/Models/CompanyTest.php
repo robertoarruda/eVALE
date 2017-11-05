@@ -5,6 +5,7 @@ namespace Tests\Nero\Evale\Models;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Nero\Evale\Models\Company;
 use Nero\Evale\Models\Employee;
+use Nero\Evale\Models\FillUp;
 use Tests\TestCase;
 
 /**
@@ -15,30 +16,6 @@ class CompanyTest extends TestCase
     use DatabaseMigrations;
 
     protected $testedClassName = Company::class;
-
-    protected $activeReflection = true;
-
-    /**
-     * @coversNothing
-     */
-    public function testFillable()
-    {
-        $property = $this->reflection->getProperty('fillable');
-        $property->setAccessible(true);
-
-        $this->assertEquals(
-            [
-                'name',
-                'cnpj',
-                'address',
-                'phone',
-                'subscription_limit',
-                'login',
-                'password',
-            ],
-            $property->getValue($this->testedClass)
-        );
-    }
 
     /**
      * @covers ::employees
@@ -52,6 +29,21 @@ class CompanyTest extends TestCase
         $this->assertEquals(
             $employees->toArray(),
             $company->employees->toArray()
+        );
+    }
+
+    /**
+     * @covers ::fillUps
+     */
+    public function testRelationWithFillUp()
+    {
+        $company = factory(Company::class)->create();
+        $fillUps = factory(FillUp::class, 5)
+            ->create(['company_id' => $company->id]);
+
+        $this->assertEquals(
+            $fillUps->toArray(),
+            $company->fillUps->toArray()
         );
     }
 

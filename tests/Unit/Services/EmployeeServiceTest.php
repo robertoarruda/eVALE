@@ -37,44 +37,6 @@ class EmployeeServiceTest extends TestCase
     }
 
     /**
-     * @covers ::count
-     */
-    public function testCount()
-    {
-        $employee = factory(Employee::class)->make();
-
-        $this->dependencies[EmployeeRepository::class]
-            ->shouldReceive('count')
-            ->with($employee->toArray())
-            ->once()
-            ->andReturn($employee);
-
-        $this->assertEquals(
-            $employee,
-            $this->testedClass->count($employee->toArray())
-        );
-    }
-
-    /**
-     * @covers ::sum
-     */
-    public function testSum()
-    {
-        $employee = factory(Employee::class)->make();
-
-        $this->dependencies[EmployeeRepository::class]
-            ->shouldReceive('sum')
-            ->with('field', $employee->toArray())
-            ->once()
-            ->andReturn($employee);
-
-        $this->assertEquals(
-            $employee,
-            $this->testedClass->sum('field', $employee->toArray())
-        );
-    }
-
-    /**
      * @covers ::create
      */
     public function testCreate()
