@@ -1,17 +1,16 @@
 <?php
 
-namespace Tests\Nero\Evale\Validator;
+namespace Tests\Nero\Evale\Validators;
 
 use Illuminate\Validation\Validator;
 use Mockery;
 use Nero\Evale\Models\Employee;
 use Nero\Evale\Services\CompanyService;
-use Nero\Evale\Services\EmployeeService;
-use Nero\Evale\Validator\EmployeeValidator;
+use Nero\Evale\Validators\EmployeeValidator;
 use Tests\TestCase;
 
 /**
- * @coversDefaultClass \Nero\Evale\Validator\EmployeeValidator
+ * @coversDefaultClass \Nero\Evale\Validators\EmployeeValidator
  */
 class EmployeeValidatorTest extends TestCase
 {
@@ -25,7 +24,6 @@ class EmployeeValidatorTest extends TestCase
 
         $this->dependencies = [
             CompanyService::class => Mockery::mock(CompanyService::class),
-            EmployeeService::class => Mockery::mock(EmployeeService::class),
         ];
 
         parent::setUp();
@@ -99,7 +97,7 @@ class EmployeeValidatorTest extends TestCase
     public function testValidateSubscriptionLimitInvalid()
     {
         $attribute = '';
-        $value = 70;
+        $value = 60;
         $parameters = array_values(['companyId' => 10, 'employeeId' => 100]);
 
         $this->dependencies[CompanyService::class]
@@ -107,6 +105,31 @@ class EmployeeValidatorTest extends TestCase
             ->with($parameters[0], [$parameters[1]])
             ->once()
             ->andReturn(50);
+
+        $this->assertFalse(
+            $this->testedClass
+                ->validateSubscriptionLimit(
+                    $attribute,
+                    $value,
+                    $parameters,
+                    $this->otherDependencies[Validator::class]
+                )
+        );
+    }
+
+    /**
+     * @covers ::validateSubscriptionLimit
+     */
+    public function testValidateSubscriptionLimitEmpty()
+    {
+        $attribute = '';
+        $value = 50;
+        $parameters = array_values(['companyId' => 10, 'employeeId' => 100]);
+
+        $this->dependencies[CompanyService::class]
+            ->shouldReceive('remainingSubscription')
+            ->with($parameters[0], [$parameters[1]])
+            ->once();
 
         $this->assertFalse(
             $this->testedClass

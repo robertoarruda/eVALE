@@ -1,6 +1,6 @@
 <?php
 
-namespace Nero\Evale\Validator;
+namespace Nero\Evale\Validators;
 
 use Hash;
 use Illuminate\Validation\Validator;
@@ -15,6 +15,9 @@ class FillUpValidator
 
     /**
      * Metodo construtor da classe
+     *
+     * @param EmployeeService $employeeService
+     * @param Hash $hash
      * @return void
      */
     public function __construct(EmployeeService $employeeService)
@@ -37,18 +40,19 @@ class FillUpValidator
         array $parameters,
         Validator $validator
     ) {
-        $employee = $this->employeeService
+        $password = $this->employeeService
             ->find([
-                'company_id' => $parameters[0],
+                'company_id' => $parameters[0] ?? 0,
                 'registration_number' => $value,
             ])
-            ->first();
+            ->first()
+            ->password ?? 0;
 
-        if (empty($employee)) {
+        if (empty($password)) {
             return false;
         }
 
-        return Hash::check($parameters[1], $employee->password);
+        return Hash::check($parameters[1] ?? 0, $password);
     }
 
     /**
@@ -70,12 +74,17 @@ class FillUpValidator
             return true;
         }
 
-        $employee = $this->employeeService
+        $employeeId = $this->employeeService
             ->find(['registration_number' => $parameters[0]])
-            ->first();
+            ->first()
+            ->id ?? 0;
+
+        if (empty($employeeId)) {
+            return false;
+        }
 
         $remainingConsumptionLimit = $this->employeeService
-            ->remainingConsumptionLimit($employee->id ?? 0) ?? 0;
+            ->remainingConsumptionLimit($employeeId) ?? 0;
 
         return ($remainingConsumptionLimit - $value >= 0);
     }

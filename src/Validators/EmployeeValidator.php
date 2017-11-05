@@ -1,10 +1,9 @@
 <?php
 
-namespace Nero\Evale\Validator;
+namespace Nero\Evale\Validators;
 
 use Illuminate\Validation\Validator;
 use Nero\Evale\Services\CompanyService;
-use Nero\Evale\Services\EmployeeService;
 
 class EmployeeValidator
 {
@@ -14,20 +13,12 @@ class EmployeeValidator
     protected $companyService;
 
     /**
-     * @var \Nero\Evale\Services\EmployeeService
-     */
-    protected $employeeService;
-
-    /**
      * Metodo construtor da classe
      * @return void
      */
-    public function __construct(
-        CompanyService $companyService,
-        EmployeeService $employeeService
-    ) {
+    public function __construct(CompanyService $companyService)
+    {
         $this->companyService = $companyService;
-        $this->employeeService = $employeeService;
     }
 
     /**

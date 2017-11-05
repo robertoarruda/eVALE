@@ -36,6 +36,6 @@ class FuelType extends Model
      */
     public function fillUps()
     {
-        return $this->belongsTo(FillUp::class, 'fuel_type_id');
+        return $this->hasMany(FillUp::class, 'fuel_type_id');
     }
 }

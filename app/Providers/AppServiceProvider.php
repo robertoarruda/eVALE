@@ -18,17 +18,17 @@ class AppServiceProvider extends ServiceProvider
     {
         Validator::extend(
             'subscription_limit',
-            'Nero\Evale\Validator\EmployeeValidator@validateSubscriptionLimit'
+            'Nero\Evale\Validators\EmployeeValidator@validateSubscriptionLimit'
         );
 
         Validator::extend(
             'employee_login',
-            'Nero\Evale\Validator\FillUpValidator@validateEmployeeLogin'
+            'Nero\Evale\Validators\FillUpValidator@validateEmployeeLogin'
         );
 
         Validator::extend(
             'consumption_limit',
-            'Nero\Evale\Validator\FillUpValidator@validateConsumptionLimit'
+            'Nero\Evale\Validators\FillUpValidator@validateConsumptionLimit'
         );
     }
 
