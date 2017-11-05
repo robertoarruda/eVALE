@@ -36,23 +36,6 @@ class CompanyServiceTest extends TestCase
     }
 
     /**
-     * @covers ::remainingSubscription
-     */
-    public function testRemainingSubscription()
-    {
-        $company = factory(Company::class)->make(['id' => 1, 'subscription_limit' => 60]);
-        $company->employees = factory(Employee::class, 5)->make(['consumption_limit' => 10]);
-
-        $this->dependencies[CompanyRepository::class]
-            ->shouldReceive('findById')
-            ->with(1)
-            ->once()
-            ->andReturn($company);
-
-        $this->assertEquals(10, $this->testedClass->remainingSubscription(1));
-    }
-
-    /**
      * @covers ::create
      */
     public function testCreate()
@@ -145,5 +128,22 @@ class CompanyServiceTest extends TestCase
             $company,
             $this->testedClass->delete(1)
         );
+    }
+
+    /**
+     * @covers ::remainingSubscription
+     */
+    public function testRemainingSubscription()
+    {
+        $company = factory(Company::class)->make(['id' => 1, 'subscription_limit' => 60]);
+        $company->employees = factory(Employee::class, 5)->make(['consumption_limit' => 10]);
+
+        $this->dependencies[CompanyRepository::class]
+            ->shouldReceive('findById')
+            ->with(1)
+            ->once()
+            ->andReturn($company);
+
+        $this->assertEquals(10, $this->testedClass->remainingSubscription(1));
     }
 }

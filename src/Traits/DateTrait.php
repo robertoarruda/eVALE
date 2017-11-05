@@ -19,10 +19,10 @@ trait DateTrait
     public function date(string $baseDate = '', string $format = 'Y-m-d')
     {
         if (empty($baseDate)) {
-            return $this->carbon::now();
+            return $this->carbon->now();
         }
 
-        return $this->carbon::createFromFormat($format, $baseDate);
+        return $this->carbon->createFromFormat($format, $baseDate);
     }
 
     /**
