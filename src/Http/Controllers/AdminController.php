@@ -50,7 +50,7 @@ class AdminController extends Controller
      */
     public function index(Request $request)
     {
-        $companies = $this->companyService->find();
+        $companies = $this->companyService->find([], 'complete');
 
         $data = [
             'companies' => $companies,

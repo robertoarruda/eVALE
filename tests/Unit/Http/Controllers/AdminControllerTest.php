@@ -73,7 +73,7 @@ class AdminControllerTest extends TestCase
 
         $this->dependencies[CompanyService::class]
             ->shouldReceive('find')
-            ->with()
+            ->with([], 'complete')
             ->once()
             ->andReturn($companies);
 
