@@ -5,6 +5,9 @@ cd /var/www/html/eVALE
 git init && git remote add origin git@gitlab.com:robertoadearruda/eVALE.git && git fetch origin && git checkout -f master && git pull origin master
 
 git checkout -- . && rm -rf .git
+
+cp .env.example .env
+
 composer install
 
 php artisan migrate --seed
