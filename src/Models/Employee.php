@@ -35,11 +35,11 @@ class Employee extends Model
      */
     protected $casts = [
         'id' => 'integer',
-        'company_id' => 'string',
+        'company_id' => 'integer',
         'name' => 'string',
         'cpf' => 'string',
         'registration_number' => 'string',
-        'consumption_limit' => 'string',
+        'consumption_limit' => 'double',
         'password' => 'string',
     ];
 
@@ -51,6 +51,16 @@ class Employee extends Model
     public function company()
     {
         return $this->belongsTo(Company::class, 'company_id');
+    }
+
+    /**
+     * Cria relacionamento com a model FillUp
+     *
+     * @return mixed
+     */
+    public function fillUps()
+    {
+        return $this->hasMany(FillUp::class, 'employee_id');
     }
 
     /**

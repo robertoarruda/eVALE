@@ -7,6 +7,7 @@ use Illuminate\Routing\Controller;
 use Nero\Evale\Http\Requests\EmployeeFormRequest;
 use Nero\Evale\Services\CompanyService;
 use Nero\Evale\Services\EmployeeService;
+use Nero\Evale\Services\FillUpService;
 
 class CompanyController extends Controller
 {
@@ -21,15 +22,22 @@ class CompanyController extends Controller
     protected $employeeService;
 
     /**
+     * @var \Nero\Evale\Services\FillUpService
+     */
+    protected $fillUpService;
+
+    /**
      * Metodo construtor da classe
      * @return void
      */
     public function __construct(
         CompanyService $companyService,
-        EmployeeService $employeeService
+        EmployeeService $employeeService,
+        FillUpService $fillUpService
     ) {
         $this->companyService = $companyService;
         $this->employeeService = $employeeService;
+        $this->fillUpService = $fillUpService;
     }
 
     /**
@@ -40,12 +48,13 @@ class CompanyController extends Controller
     {
         $companyId = $request->user()->id ?? 0;
 
-        $remainingSubscription = $this->companyService->remainingSubscription($companyId);
+        $employees = $this->employeeService->findByCompanyId($companyId, 'complete');
 
         $index = [
-            'list' => $this->employeeService->find(['company_id' => $companyId]),
-            'employeesCount' => $this->employeeService->count(['company_id' => $companyId]) ?: 0,
-            'remainingSubscription' => number_format($remainingSubscription, 2, ',', '.'),
+            'employees' => $employees,
+            'employeesCount' => $employees->count() ?: 0,
+            'totalConsumption' => $this->fillUpService->filter($companyId)->sum('value') ?? 0,
+            'remainingSubscription' => $this->companyService->remainingSubscription($companyId),
         ];
 
         return view('company.index', $index);
@@ -57,7 +66,7 @@ class CompanyController extends Controller
      */
     public function create()
     {
-        return view('company.form');
+        return view('company.employee');
     }
 
     /**
@@ -77,42 +86,42 @@ class CompanyController extends Controller
 
     /**
      * Show
-     * @param int $entityId Id da entidade
+     * @param int $employeeId Id do funcionario
      * @return \Illuminate\Routing\Redirector|\Illuminate\Http\RedirectResponse
      */
-    public function show(int $entityId)
+    public function show(int $employeeId)
     {
-        return redirect()->route('company.edit', $entityId);
+        return redirect()->route('company.edit', $employeeId);
     }
 
     /**
      * Edit
-     * @param int $entityId Id da entidade
+     * @param int $employeeId Id do funcionario
      * @return \Illuminate\Http\Response
      */
-    public function edit(Request $request, int $entityId)
+    public function edit(Request $request, int $employeeId)
     {
         $params = [
-            'id' => $entityId,
+            'id' => $employeeId,
             'company_id' => $request->user()->id ?? 0,
         ];
 
         $data = $this->employeeService->find($params)->first();
 
-        return view('company.form', $data->toArray());
+        return view('company.employee', $data->toArray());
     }
 
     /**
      * Update
      * @param Request $request
-     * @param int $entityId Id da entidade
+     * @param int $employeeId Id do funcionario
      * @return \Illuminate\Routing\Redirector|\Illuminate\Http\RedirectResponse
      */
-    public function update(EmployeeFormRequest $request, int $entityId)
+    public function update(EmployeeFormRequest $request, int $employeeId)
     {
         $request->merge(['company_id' => $request->user()->id ?? 0]);
 
-        $this->employeeService->update($entityId, $request->all());
+        $this->employeeService->update($employeeId, $request->all());
 
         return redirect()->route('company.index')
             ->with('success', 'Registro alterado com sucesso!');
@@ -120,14 +129,42 @@ class CompanyController extends Controller
 
     /**
      * Destroy
-     * @param int $entityId Id da entidade
+     * @param int $employeeId Id do funcionario
      * @return \Illuminate\Routing\Redirector|\Illuminate\Http\RedirectResponse
      */
-    public function destroy(int $entityId)
+    public function destroy(int $employeeId)
     {
-        $this->employeeService->delete($entityId);
+        $this->employeeService->delete($employeeId);
 
         return redirect()->route('company.index')
             ->with('success', 'Registro excluido com sucesso!');
     }
+
+    /**
+     * Relatorios
+     * @return \Illuminate\Http\Response
+     */
+    public function reports(Request $request)
+    {
+        $companyId = $request->user()->id ?? 0;
+        $employeeId = $request->query('filter_employee') ?: 0;
+        $initial = $request->query('filter_initial') ?: '';
+        $final = $request->query('filter_final') ?: '';
+
+        $fillUps = $this->fillUpService->filter($companyId, $employeeId, $initial, $final);
+
+        $index = [
+            'fillUps' => $fillUps->sortByDesc('created_at'),
+            'fillUpsCount' => $fillUps->count() ?: 0,
+            'totalConsumption' => $fillUps->sum('value') ?? 0,
+            'filter' => [
+                'employees' => $this->employeeService->findByCompanyId($companyId),
+                'initial' => $this->fillUpService->startOfMonth(),
+                'final' => $this->fillUpService->endOfMonth(),
+            ],
+        ];
+
+        return view('company.reports', $index);
+    }
+
 }

@@ -2,8 +2,10 @@
 
 namespace Tests\Nero\Evale\Services;
 
+use Carbon\Carbon;
 use Mockery;
 use Nero\Evale\Models\Employee;
+use Nero\Evale\Models\FillUp;
 use Nero\Evale\Repositories\EmployeeRepository;
 use Nero\Evale\Services\EmployeeService;
 use Tests\TestCase;
@@ -19,9 +21,37 @@ class EmployeeServiceTest extends TestCase
     {
         $this->dependencies = [
             EmployeeRepository::class => Mockery::mock(EmployeeRepository::class),
+            Carbon::class => new Carbon(),
         ];
 
         parent::setUp();
+    }
+
+    protected function pushFillUpsInEmployee(Employee $employee)
+    {
+        $employee->fillUps = factory(FillUp::class, 10)
+            ->make([
+                'value' => 10,
+                'created_at' => $this->dependencies[Carbon::class]->now(),
+            ]);
+
+        $employee->fillUps->push(
+            factory(FillUp::class)
+                ->make([
+                    'value' => 100,
+                    'created_at' => $this->dependencies[Carbon::class]->now()->addMonths(1),
+                ])
+        );
+
+        $employee->fillUps->push(
+            factory(FillUp::class)
+                ->make([
+                    'value' => 100,
+                    'created_at' => $this->dependencies[Carbon::class]->now()->subMonths(1),
+                ])
+        );
+
+        return $employee;
     }
 
     /**
@@ -29,47 +59,10 @@ class EmployeeServiceTest extends TestCase
      */
     public function testConstruct()
     {
+        $employee = factory(Employee::class)->make(['id' => 1]);
         $testedClass = new EmployeeService(...array_values($this->dependencies));
 
         $this->assertInstanceOf(EmployeeService::class, $testedClass);
-    }
-
-    /**
-     * @covers ::count
-     */
-    public function testCount()
-    {
-        $employee = factory(Employee::class)->make();
-
-        $this->dependencies[EmployeeRepository::class]
-            ->shouldReceive('count')
-            ->with($employee->toArray())
-            ->once()
-            ->andReturn($employee);
-
-        $this->assertEquals(
-            $employee,
-            $this->testedClass->count($employee->toArray())
-        );
-    }
-
-    /**
-     * @covers ::sum
-     */
-    public function testSum()
-    {
-        $employee = factory(Employee::class)->make();
-
-        $this->dependencies[EmployeeRepository::class]
-            ->shouldReceive('sum')
-            ->with('field', $employee->toArray())
-            ->once()
-            ->andReturn($employee);
-
-        $this->assertEquals(
-            $employee,
-            $this->testedClass->sum('field', $employee->toArray())
-        );
     }
 
     /**
@@ -96,16 +89,16 @@ class EmployeeServiceTest extends TestCase
      */
     public function testFind()
     {
-        $employee = factory(Employee::class)->make(['id' => 1]);
+        $employees = factory(Employee::class, 1)->make(['id' => 1]);
 
         $this->dependencies[EmployeeRepository::class]
             ->shouldReceive('find')
             ->with(['id' => 1])
             ->once()
-            ->andReturn($employee);
+            ->andReturn($employees);
 
         $this->assertEquals(
-            $employee,
+            $employees,
             $this->testedClass->find(['id' => 1])
         );
     }
@@ -166,4 +159,158 @@ class EmployeeServiceTest extends TestCase
             $this->testedClass->delete(1)
         );
     }
+
+    /**
+     * @covers ::findByCompanyId
+     */
+    public function testFindByCompanyId()
+    {
+        $companyId = 10;
+        $employee = factory(Employee::class, 10)->make(['company_id' => $companyId]);
+
+        $this->dependencies[EmployeeRepository::class]
+            ->shouldReceive('find')
+            ->with(['company_id' => $companyId])
+            ->once()
+            ->andReturn($employee);
+
+        $this->assertEquals(
+            $employee,
+            $this->testedClass->findByCompanyId($companyId)
+        );
+    }
+
+    /**
+     * @covers ::findByCompanyId
+     */
+    public function testFindByCompanyIdComplete()
+    {
+        $companyId = 10;
+        $employee = factory(Employee::class, 10)->make([
+            'id' => 1,
+            'company_id' => $companyId,
+        ]);
+
+        $this->dependencies[EmployeeRepository::class]
+            ->shouldReceive('find')
+            ->with(['company_id' => $companyId])
+            ->once()
+            ->andReturn($employee);
+
+        $this->dependencies[EmployeeRepository::class]
+            ->shouldReceive('findById')
+            ->times(10);
+
+        $this->assertEquals(
+            $employee,
+            $this->testedClass->findByCompanyId($companyId, 'complete')
+        );
+    }
+
+    /**
+     * @covers ::remainingConsumptionLimit
+     */
+    public function testRemainingConsumptionLimit()
+    {
+        $employeeId = 10;
+        $employee = factory(Employee::class)->make(['consumption_limit' => 101]);
+        $employee = $this->pushFillUpsInEmployee($employee);
+
+        $this->dependencies[EmployeeRepository::class]
+            ->shouldReceive('findById')
+            ->with($employeeId)
+            ->once()
+            ->andReturn($employee);
+
+        $this->assertEquals(
+            1.0,
+            $this->testedClass->remainingConsumptionLimit($employeeId)
+        );
+    }
+
+    /**
+     * @covers ::remainingConsumptionLimit
+     */
+    public function testRemainingConsumptionLimitZero()
+    {
+        $employeeId = 10;
+        $employee = factory(Employee::class)->make(['consumption_limit' => 100]);
+        $employee = $this->pushFillUpsInEmployee($employee);
+
+        $this->dependencies[EmployeeRepository::class]
+            ->shouldReceive('findById')
+            ->with($employeeId)
+            ->once()
+            ->andReturn($employee);
+
+        $this->assertEquals(
+            0,
+            $this->testedClass->remainingConsumptionLimit($employeeId)
+        );
+    }
+
+    /**
+     * @covers ::remainingConsumptionLimit
+     */
+    public function testRemainingConsumptionLimitNegative()
+    {
+        $employeeId = 10;
+        $employee = factory(Employee::class)->make(['consumption_limit' => 99]);
+        $employee = $this->pushFillUpsInEmployee($employee);
+
+        $this->dependencies[EmployeeRepository::class]
+            ->shouldReceive('findById')
+            ->with($employeeId)
+            ->once()
+            ->andReturn($employee);
+
+        $this->assertEquals(
+            -1.0,
+            $this->testedClass->remainingConsumptionLimit($employeeId)
+        );
+    }
+
+    /**
+     * @covers ::remainingConsumptionLimit
+     */
+    public function testRemainingConsumptionLimitWithDates()
+    {
+        $employeeId = 10;
+        $employee = factory(Employee::class)->make(['consumption_limit' => 100]);
+        $employee = $this->pushFillUpsInEmployee($employee);
+
+        $this->dependencies[EmployeeRepository::class]
+            ->shouldReceive('findById')
+            ->with($employeeId)
+            ->once()
+            ->andReturn($employee);
+
+        $this->assertEquals(
+            -200.0,
+            $this->testedClass->remainingConsumptionLimit(
+                $employeeId,
+                $this->dependencies[Carbon::class]->now()->subMonths(1)->toDateString(),
+                $this->dependencies[Carbon::class]->now()->addMonths(1)->toDateString()
+            )
+        );
+    }
+
+    /**
+     * @covers ::remainingConsumptionLimit
+     */
+    public function testRemainingConsumptionLimitEmptyEmployee()
+    {
+        $employeeId = 10;
+
+        $this->dependencies[EmployeeRepository::class]
+            ->shouldReceive('findById')
+            ->with($employeeId)
+            ->once();
+
+        $this->assertEquals(
+            0,
+            $this->testedClass->remainingConsumptionLimit($employeeId)
+        );
+    }
+
 }

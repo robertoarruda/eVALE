@@ -10,30 +10,9 @@ abstract class Service
     protected $repository;
 
     /**
-     * Conta registro pelos parametros
-     * @param array $params
-     * @return \Illuminate\Database\Eloquent\Model
-     */
-    public function count(array $params = [])
-    {
-        return $this->repository->count($params);
-    }
-
-    /**
-     * Soma registro pelos parametros
-     * @param string $field Campo
-     * @param array $params
-     * @return \Illuminate\Database\Eloquent\Model
-     */
-    public function sum(string $field, array $params = [])
-    {
-        return $this->repository->sum($field, $params);
-    }
-
-    /**
      * Busca registro pelos parametros
      * @param array $params
-     * @return \Illuminate\Database\Eloquent\Model
+     * @return Colletion
      */
     public function find(array $params = [])
     {
