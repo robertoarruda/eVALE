@@ -34,46 +34,6 @@ class CompanyRepositoryTest extends TestCase
     }
 
     /**
-     * @covers ::count
-     */
-    public function testCount()
-    {
-        $company = factory(Company::class, 1)->make();
-
-        $this->dependencies[Company::class]
-            ->shouldReceive('where->count')
-            ->with(['id' => 1])
-            ->with()
-            ->once()
-            ->andReturn($company);
-
-        $this->assertEquals(
-            $company,
-            $this->testedClass->count(['id' => 1])
-        );
-    }
-
-    /**
-     * @covers ::sum
-     */
-    public function testSum()
-    {
-        $company = factory(Company::class, 1)->make();
-
-        $this->dependencies[Company::class]
-            ->shouldReceive('where->sum')
-            ->with(['id' => 1])
-            ->with('field')
-            ->once()
-            ->andReturn($company);
-
-        $this->assertEquals(
-            $company,
-            $this->testedClass->sum('field', ['id' => 1])
-        );
-    }
-
-    /**
      * @covers ::find
      */
     public function testFind()

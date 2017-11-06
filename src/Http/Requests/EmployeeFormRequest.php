@@ -4,6 +4,7 @@ namespace Nero\Evale\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 
 class EmployeeFormRequest extends FormRequest
 {
@@ -20,17 +21,25 @@ class EmployeeFormRequest extends FormRequest
     /**
      * Get the validation rules that apply to the request.
      *
+     * @param Request $request
+     * @param Rule $rule
      * @return array
      */
-    public function rules(Request $request)
+    public function rules(Request $request, Rule $rule)
     {
         $employeeId = $request->employeeId ?? 0;
         $companyId = $request->user()->id ?? 0;
 
+        $registrationNumberUnique = $rule->unique('employees')
+            ->ignore($employeeId)
+            ->where(function ($query) use ($companyId) {
+                return $query->where('company_id', $companyId);
+            });
+
         $rules = [
             'name' => 'required',
             'cpf' => "required|unique:employees,cpf,{$employeeId}",
-            'registration_number' => "required|unique:employees,registration_number,{$employeeId}",
+            'registration_number' => ['required', $registrationNumberUnique],
             'consumption_limit' => "required|subscription_limit:{$companyId},{$employeeId}",
         ];
 
@@ -52,6 +61,7 @@ class EmployeeFormRequest extends FormRequest
             'cpf.unique' => 'CPF informado já existe.',
             'registration_number.unique' => 'Número de matricula informado já existe.',
             'password.confirmed' => 'Confirmação da senha não confere.',
+            'consumption_limit.subscription_limit' => 'Limite de consumo informado supera o limite da assinatura.',
         ];
     }
 }

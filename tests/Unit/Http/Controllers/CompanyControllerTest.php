@@ -10,9 +10,10 @@ use Nero\Evale\Http\Controllers\CompanyController;
 use Nero\Evale\Http\Requests\EmployeeFormRequest;
 use Nero\Evale\Models\Company;
 use Nero\Evale\Models\Employee;
-use Nero\Evale\Models\User;
+use Nero\Evale\Models\FillUp;
 use Nero\Evale\Services\CompanyService;
 use Nero\Evale\Services\EmployeeService;
+use Nero\Evale\Services\FillUpService;
 use Tests\TestCase;
 use View;
 
@@ -34,6 +35,7 @@ class CompanyControllerTest extends TestCase
         $this->dependencies = [
             CompanyService::class => Mockery::mock(CompanyService::class),
             EmployeeService::class => Mockery::mock(EmployeeService::class),
+            FillUpService::class => Mockery::mock(FillUpService::class),
         ];
 
         parent::setUp();
@@ -55,48 +57,46 @@ class CompanyControllerTest extends TestCase
     public function testIndex()
     {
         $employeesCount = 10;
-        $subscriptionLimit = 1000.99;
-        $totalConsumptionLimit = 559.80;
-        $remainingSubscription = $subscriptionLimit - $totalConsumptionLimit;
+        $remainingSubscription = 10000;
 
-        $user = factory(User::class)->make(['id' => 1]);
+        $fillUpCount = 5;
+        $consumption = 100;
+        $totalConsumption = $consumption * $fillUpCount;
+
+        $company = factory(Company::class)->make(['id' => 1]);
         $this->otherDependencies[Request::class]
             ->shouldReceive('user')
             ->with()
             ->once()
-            ->andReturn($user);
+            ->andReturn($company);
 
-        $companies = factory(Company::class, $employeesCount)
-            ->make(['subscription_limit' => $subscriptionLimit]);
-
-        $this->dependencies[CompanyService::class]
-            ->shouldReceive('find')
-            ->with(['id' => $user->id])
+        $employees = factory(Employee::class, $employeesCount)->make();
+        $this->dependencies[EmployeeService::class]
+            ->shouldReceive('findByCompanyId')
+            ->with($company->id, 'complete')
             ->once()
-            ->andReturn($companies);
+            ->andReturn($employees);
+
+        $fillUp = factory(FillUp::class, $fillUpCount)
+            ->make(['value' => $consumption]);
+
+        $this->dependencies[FillUpService::class]
+            ->shouldReceive('filter')
+            ->with($company->id)
+            ->once()
+            ->andReturn($fillUp);
 
         $this->dependencies[CompanyService::class]
             ->shouldReceive('remainingSubscription')
-            ->with($user->id)
+            ->with($company->id)
             ->once()
             ->andReturn($remainingSubscription);
 
-        $this->dependencies[EmployeeService::class]
-            ->shouldReceive('find')
-            ->with(['company_id' => $user->id])
-            ->once()
-            ->andReturn($companies);
-
-        $this->dependencies[EmployeeService::class]
-            ->shouldReceive('count')
-            ->with(['company_id' => $user->id])
-            ->once()
-            ->andReturn($employeesCount);
-
         $index = [
-            'list' => $companies,
+            'employees' => $employees,
             'employeesCount' => $employeesCount,
-            'remainingSubscription' => number_format($remainingSubscription, 2, ',', '.'),
+            'totalConsumption' => $totalConsumption,
+            'remainingSubscription' => $remainingSubscription,
         ];
 
         View::shouldReceive('make')
@@ -116,7 +116,7 @@ class CompanyControllerTest extends TestCase
     public function testCreate()
     {
         View::shouldReceive('make')
-            ->with('company.form', [], [])
+            ->with('company.employee', [], [])
             ->once()
             ->andReturn($this->otherDependencies[Response::class]);
 
@@ -131,20 +131,20 @@ class CompanyControllerTest extends TestCase
      */
     public function testStore()
     {
-        $user = factory(User::class)->make(['id' => 1]);
+        $company = factory(Company::class)->make(['id' => 1]);
         $this->otherDependencies[EmployeeFormRequest::class]
             ->shouldReceive('user')
             ->with()
             ->once()
-            ->andReturn($user);
+            ->andReturn($company);
 
         $this->otherDependencies[EmployeeFormRequest::class]
             ->shouldReceive('merge')
-            ->with(['company_id' => $user->id])
+            ->with(['company_id' => $company->id])
             ->once();
 
         $request = factory(Company::class)
-            ->make(['company_id' => $user->id])
+            ->make(['company_id' => $company->id])
             ->toArray();
 
         $this->otherDependencies[EmployeeFormRequest::class]
@@ -180,18 +180,18 @@ class CompanyControllerTest extends TestCase
      */
     public function testEdit()
     {
-        $entityId = 1;
+        $employeeId = 1;
 
-        $user = factory(User::class)->make(['id' => 1]);
+        $company = factory(Company::class)->make(['id' => 1]);
         $this->otherDependencies[Request::class]
             ->shouldReceive('user')
             ->with()
             ->once()
-            ->andReturn($user);
+            ->andReturn($company);
 
         $params = [
-            'id' => $entityId,
-            'company_id' => $user->id,
+            'id' => $employeeId,
+            'company_id' => $company->id,
         ];
 
         $employee = factory(Employee::class, 1)->make();
@@ -202,13 +202,13 @@ class CompanyControllerTest extends TestCase
             ->andReturn($employee);
 
         View::shouldReceive('make')
-            ->with('company.form', $employee->first()->toArray(), [])
+            ->with('company.employee', $employee->first()->toArray(), [])
             ->once()
             ->andReturn($this->otherDependencies[Response::class]);
 
         $this->assertInstanceOf(
             Response::class,
-            $this->testedClass->edit($this->otherDependencies[Request::class], $entityId)
+            $this->testedClass->edit($this->otherDependencies[Request::class], $employeeId)
         );
     }
 
@@ -217,22 +217,22 @@ class CompanyControllerTest extends TestCase
      */
     public function testUpdate()
     {
-        $entityId = 1;
+        $employeeId = 1;
 
-        $user = factory(User::class)->make(['id' => 1]);
+        $company = factory(Company::class)->make(['id' => 1]);
         $this->otherDependencies[EmployeeFormRequest::class]
             ->shouldReceive('user')
             ->with()
             ->once()
-            ->andReturn($user);
+            ->andReturn($company);
 
         $this->otherDependencies[EmployeeFormRequest::class]
             ->shouldReceive('merge')
-            ->with(['company_id' => $user->id])
+            ->with(['company_id' => $company->id])
             ->once();
 
         $request = factory(Company::class)
-            ->make(['company_id' => $user->id])
+            ->make(['company_id' => $company->id])
             ->toArray();
 
         $this->otherDependencies[EmployeeFormRequest::class]
@@ -243,12 +243,12 @@ class CompanyControllerTest extends TestCase
 
         $this->dependencies[EmployeeService::class]
             ->shouldReceive('update')
-            ->with($entityId, $request)
+            ->with($employeeId, $request)
             ->once();
 
         $this->assertInstanceOf(
             RedirectResponse::class,
-            $this->testedClass->update($this->otherDependencies[EmployeeFormRequest::class], $entityId)
+            $this->testedClass->update($this->otherDependencies[EmployeeFormRequest::class], $employeeId)
         );
     }
 
@@ -257,16 +257,102 @@ class CompanyControllerTest extends TestCase
      */
     public function testDestroy()
     {
-        $entityId = 1;
+        $employeeId = 1;
 
         $this->dependencies[EmployeeService::class]
             ->shouldReceive('delete')
-            ->with($entityId)
+            ->with($employeeId)
             ->once();
 
         $this->assertInstanceOf(
             RedirectResponse::class,
-            $this->testedClass->destroy($entityId)
+            $this->testedClass->destroy($employeeId)
+        );
+    }
+
+    /**
+     * @covers ::reports
+     */
+    public function testReports()
+    {
+        $fillUpsCount = 10;
+        $fillUpsValue = 10;
+        $startOfMonth = '2017-11-01';
+        $endOfMonth = '2017-11-30';
+
+        $company = factory(Company::class)->make(['id' => 1]);
+        $this->otherDependencies[Request::class]
+            ->shouldReceive('user')
+            ->with()
+            ->once()
+            ->andReturn($company);
+
+        $employeeId = 10;
+        $this->otherDependencies[Request::class]
+            ->shouldReceive('query')
+            ->with('filter_employee')
+            ->once()
+            ->andReturn($employeeId);
+
+        $initial = '';
+        $this->otherDependencies[Request::class]
+            ->shouldReceive('query')
+            ->with('filter_initial')
+            ->once()
+            ->andReturn($initial);
+
+        $final = '';
+        $this->otherDependencies[Request::class]
+            ->shouldReceive('query')
+            ->with('filter_final')
+            ->once()
+            ->andReturn($final);
+
+        $fillUps = factory(FillUp::class, $fillUpsCount)->make(['value' => $fillUpsValue]);
+        $this->dependencies[FillUpService::class]
+            ->shouldReceive('filter')
+            ->with($company->id, $employeeId, '', '')
+            ->once()
+            ->andReturn($fillUps);
+
+        $employees = factory(Employee::class, 10)->make();
+        $this->dependencies[EmployeeService::class]
+            ->shouldReceive('findByCompanyId')
+            ->with($company->id)
+            ->once()
+            ->andReturn($employees);
+
+        $this->dependencies[FillUpService::class]
+            ->shouldReceive('startOfMonth')
+            ->with()
+            ->once()
+            ->andReturn($startOfMonth);
+
+        $this->dependencies[FillUpService::class]
+            ->shouldReceive('endOfMonth')
+            ->with()
+            ->once()
+            ->andReturn($endOfMonth);
+
+        $data = [
+            'fillUps' => $fillUps,
+            'fillUpsCount' => $fillUpsCount,
+            'totalConsumption' => $fillUpsCount * $fillUpsValue,
+            'filter' => [
+                'employees' => $employees,
+                'initial' => $startOfMonth,
+                'final' => $endOfMonth,
+            ],
+        ];
+
+        View::shouldReceive('make')
+            ->with('company.reports', $data, [])
+            ->once()
+            ->andReturn($this->otherDependencies[Response::class]);
+
+        $this->assertInstanceOf(
+            Response::class,
+            $this->testedClass->reports($this->otherDependencies[Request::class])
         );
     }
 }
