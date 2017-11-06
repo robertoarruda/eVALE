@@ -8,7 +8,6 @@ git checkout -- . && rm -rf .git
 chown -R 1000:1000 ../eVALE
 
 composer install
-chmod -R 777 storage && chmod -R 777 bootstrap/cache
 
 php artisan migrate --seed
 php artisan view:clear
@@ -17,3 +16,5 @@ php artisan config:clear
 php artisan cache:clear
 php artisan clear-compiled
 php artisan key:generate
+
+chmod -R 777 storage && chmod -R 777 bootstrap/cache
