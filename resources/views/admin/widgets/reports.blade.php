@@ -16,9 +16,9 @@
                 @foreach ($fillUps as $fillUp)
                     <tr>
                         <td>{{ $fillUp->created_at->format('d/m/Y H:i:s') }}</td>
-                        <td>{{ $fillUp->employee->name }}</td>
+                        <td>{{ $fillUp->employee->name ?? 'Indefinido' }}</td>
                         <td>{{ $fillUp->company->name }}</td>
-                        <td>{{ $fillUp->fuelType->name }}</td>
+                        <td>{{ $fillUp->fuelType->name ?? 'Indefinido' }}</td>
                         <td class="text-right">R$ {{ number_format($fillUp->value, 2, ',', '.') }}</td>
                     </tr>
                 @endforeach
