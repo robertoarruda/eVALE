@@ -63,16 +63,16 @@ class FillUpServiceTest extends TestCase
      */
     public function testFind()
     {
-        $fillUp = factory(FillUp::class)->make(['id' => 1]);
+        $fillUps = factory(FillUp::class, 1)->make(['id' => 1]);
 
         $this->dependencies[FillUpRepository::class]
             ->shouldReceive('find')
             ->with(['id' => 1])
             ->once()
-            ->andReturn($fillUp);
+            ->andReturn($fillUps);
 
         $this->assertEquals(
-            $fillUp,
+            $fillUps,
             $this->testedClass->find(['id' => 1])
         );
     }

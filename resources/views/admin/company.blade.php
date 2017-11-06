@@ -48,11 +48,11 @@
                     </div>
                     <div class="form-group">
                         <label for="password">Senha</label>
-                        <input type="password" id="password" name="password" class="form-control" minlength="6" maxlength="8">
+                        <input type="password" id="password" name="password" class="form-control" minlength="6" maxlength="8" {{ empty($id) ? 'required' : '' }}>
                     </div>
                     <div class="form-group">
                         <label for="password_confirmation">Confirmação de senha</label>
-                        <input type="password" id="password_confirmation" name="password_confirmation" class="form-control" minlength="6" maxlength="8">
+                        <input type="password" id="password_confirmation" name="password_confirmation" class="form-control" minlength="6" maxlength="8" {{ empty($id) ? 'required' : '' }}>
                     </div>
                     <button type="submit" class="btn btn-primary">Salvar</button>
                     <a class="btn btn-default" href="{{ route('admin.index') }}">Cancelar</a>

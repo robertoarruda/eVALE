@@ -58,16 +58,16 @@ class FuelTypeServiceTest extends TestCase
      */
     public function testFind()
     {
-        $fuelType = factory(FuelType::class)->make(['id' => 1]);
+        $fuelTypes = factory(FuelType::class, 1)->make(['id' => 1]);
 
         $this->dependencies[FuelTypeRepository::class]
             ->shouldReceive('find')
             ->with(['id' => 1])
             ->once()
-            ->andReturn($fuelType);
+            ->andReturn($fuelTypes);
 
         $this->assertEquals(
-            $fuelType,
+            $fuelTypes,
             $this->testedClass->find(['id' => 1])
         );
     }

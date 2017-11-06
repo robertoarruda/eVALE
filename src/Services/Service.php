@@ -12,7 +12,7 @@ abstract class Service
     /**
      * Busca registro pelos parametros
      * @param array $params
-     * @return \Illuminate\Database\Eloquent\Model
+     * @return Colletion
      */
     public function find(array $params = [])
     {

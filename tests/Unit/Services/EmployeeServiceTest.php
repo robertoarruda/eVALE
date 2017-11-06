@@ -89,16 +89,16 @@ class EmployeeServiceTest extends TestCase
      */
     public function testFind()
     {
-        $employee = factory(Employee::class)->make(['id' => 1]);
+        $employees = factory(Employee::class, 1)->make(['id' => 1]);
 
         $this->dependencies[EmployeeRepository::class]
             ->shouldReceive('find')
             ->with(['id' => 1])
             ->once()
-            ->andReturn($employee);
+            ->andReturn($employees);
 
         $this->assertEquals(
-            $employee,
+            $employees,
             $this->testedClass->find(['id' => 1])
         );
     }
