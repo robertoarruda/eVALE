@@ -2,7 +2,7 @@
 
 cd /var/www/html/eVALE
 
-git init && git remote add origin git@gitlab.com:robertoadearruda/eVALE.git && git fetch origin && git checkout -f master && git pull origin master
+git init && git remote add origin git@github.com:evalesoftware/eVALE.git && git fetch origin && git checkout -f master && git pull origin master
 
 git checkout -- . && rm -rf .git
 
